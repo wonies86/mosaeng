@@ -1214,7 +1214,9 @@ async function connect(opts){
     client = null; syncState = 'off'; renderSyncDot();
     const msg = /relation|does not exist|42P01/i.test(e.message||'')
       ? '테이블이 없어요 · SQL Editor에서 supabase_schema.sql을 먼저 실행해 주세요'
-      : (/Invalid API key|JWT|401/i.test(e.message||'') ? 'anon key가 맞지 않아요' : (e.message || '연결 실패'));
+      : (/Invalid API key|JWT|401/i.test(e.message||'') ? 'anon key가 맞지 않아요'
+      : (/Failed to fetch|NetworkError|ERR_NAME|fetch/i.test(e.message||'') ? '연결이 안 돼요 · URL과 인터넷을 다시 확인해 주세요'
+      : (e.message || '연결 실패')));
     setStateText(msg,'err');
     return false;
   }
