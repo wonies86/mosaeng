@@ -8,7 +8,7 @@ create table if not exists public.mosaeng_contis (
   id          uuid primary key,
   title       text        not null default '',
   author      text        not null default '모과',      -- 모과 | 생강 | 함께
-  cast        text[]      not null default '{}',         -- 등장인물: 모과 | 생강 | 자두 | 대추 | 한라봉 | 멜론 | 적포도 | 능금 | 청포도
+  cast        text[]      not null default '{}',         -- 등장인물: 모과 | 생강 | 자두 | 대추 | 한라봉 | 멜론 | 적포도 | 능금 | 청포도 | 콩이
   category    text        not null default 'wedding',   -- wedding | daily | trip | diet
   status      text        not null default 'idea',      -- idea | conti | making | done
   cuts        jsonb       not null default '["","","",""]'::jsonb,  -- 컷 배열 (4칸 기본, 9컷까지 늘어남)
