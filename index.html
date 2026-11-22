@@ -410,6 +410,31 @@ img{max-width:100%}
 .castpick button.on{background:var(--quince-soft);border-color:var(--quince-line);color:var(--ginger-deep);font-weight:700}
 .castpick button:active{transform:scale(.97)}
 
+/* ---------- 카톡 캡처 OCR ---------- */
+.ocrbox{margin-bottom:14px}
+.ocr-pick{
+  width:100%;display:flex;align-items:center;gap:9px;text-align:left;
+  background:#FDF6E8;border:1px dashed var(--quince-line);border-radius:14px;
+  padding:10px 12px;transition:background .15s ease, transform .14s ease;
+}
+.ocr-pick:active{transform:scale(.99);background:var(--quince-soft)}
+.ocr-pick .ico{font-size:19px;flex:0 0 auto}
+.ocr-pick .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.ocr-pick .tx b{font-size:13px;font-weight:700;color:var(--ginger-deep);letter-spacing:-.3px}
+.ocr-pick .tx em{font-style:normal;font-size:10.5px;color:#9A8B78;letter-spacing:-.2px}
+.ocr-pick .go{font-size:16px;color:var(--ginger);font-weight:700;flex:0 0 auto}
+.ocr-panel{margin-top:9px;background:#FFFCF6;border:1px solid var(--line);border-radius:14px;padding:10px}
+.ocr-thumbs{display:flex;gap:6px;overflow-x:auto;padding-bottom:7px;scrollbar-width:none}
+.ocr-thumbs::-webkit-scrollbar{display:none}
+.ocr-thumbs img{width:56px;height:56px;object-fit:cover;border-radius:10px;flex:0 0 auto;border:1px solid var(--line);background:#F2EADD}
+.ocr-line{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;color:var(--ink-soft);letter-spacing:-.2px}
+.ocr-line #ocrPct{font-family:var(--hand);font-size:12px;color:var(--ginger-deep);font-weight:700}
+.ocr-track{height:5px;border-radius:3px;background:#F0E5D5;overflow:hidden;margin-top:6px}
+.ocr-track i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#F4C95D,#C4936A);transition:width .25s ease}
+.ocr-acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.ocr-acts .btn{flex:1 1 auto}
+.ocr-note{margin:7px 0 0;font-size:10px;color:#B3A492;line-height:1.5;letter-spacing:-.2px}
+
 .cuts{display:grid;gap:8px}
 .cutrow{
   display:flex;gap:9px;align-items:flex-start;
@@ -607,6 +632,29 @@ code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-fa
     </div>
   </div>
   <div class="sheet-body">
+    <div class="ocrbox">
+      <button type="button" class="ocr-pick" id="ocrPick">
+        <span class="ico">📸</span>
+        <span class="tx">
+          <b>카톡 캡처로 콘티 채우기</b>
+          <em>캡처 여러 장 선택 → 대화를 자동으로 읽어요</em>
+        </span>
+        <span class="go">＋</span>
+      </button>
+      <input type="file" id="ocrFile" accept="image/*" multiple hidden>
+      <div class="ocr-panel" id="ocrPanel" hidden>
+        <div class="ocr-thumbs" id="ocrThumbs"></div>
+        <div class="ocr-line"><span id="ocrState">대기 중</span><span id="ocrPct"></span></div>
+        <div class="ocr-track"><i id="ocrBar"></i></div>
+        <div class="ocr-acts" id="ocrActs" hidden>
+          <button type="button" class="btn btn-line btn-sm" id="ocrSplit">🪄 컷 자동 나누기</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="ocrCopy">📋 제작 요청 복사</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="ocrClear">지우기</button>
+        </div>
+        <p class="ocr-note">이미지는 폰 안에서만 읽혀요(서버 전송 없음). 인식이 어려우면 메모에 직접 적어주세요.</p>
+      </div>
+    </div>
+
     <div class="field">
       <div class="flabel"><b>제목</b><span class="hint">예: EP.03 생강의 첫 요리</span></div>
       <input class="tinput" id="fTitle" placeholder="이번 편 제목을 적어주세요" maxlength="80">
@@ -1186,6 +1234,7 @@ function paintForm(){
 
 function openEditor(id){
   editingId = id || null;
+  ocrResetPanel();
   const it = id ? items.find(i=>i.id===id) : null;
   form = it
     ? { author:it.author, category:it.category, status:it.status, cast:(Array.isArray(it.cast)? it.cast.slice() : []),
@@ -1313,6 +1362,161 @@ async function copyText(text){
   }
 }
 
+/* ---------- 카톡 캡처 → 콘티 (Tesseract.js, 지연 로드) ---------- */
+const OCR_CDN = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+const OCR_LABEL = {
+  'loading tesseract core':'인식 엔진 내려받는 중',
+  'initializing tesseract':'인식 엔진 켜는 중',
+  'loading language traineddata':'한글 데이터 내려받는 중 (첫 1회)',
+  'initializing api':'인식기 준비 중',
+  'recognizing text':'글자 읽는 중'
+};
+let ocrWorkerP = null;
+let ocrFiles = [];
+let ocrUrls = [];
+let ocrText = '';
+let ocrBase = 0;
+
+function ocrEl(id){ return document.getElementById(id); }
+function ocrSetState(msg, pct){
+  ocrEl('ocrState').textContent = msg;
+  ocrEl('ocrPct').textContent = (typeof pct === 'number') ? Math.round(pct) + '%' : '';
+  ocrEl('ocrBar').style.width = (typeof pct === 'number') ? Math.max(2, Math.min(100, pct)) + '%' : '0%';
+}
+function ocrLoadScript(src){
+  return new Promise((resolve, reject)=>{
+    const s = document.createElement('script');
+    s.src = src; s.async = true;
+    s.onload = ()=>resolve(true);
+    s.onerror = ()=>reject(new Error('ocr-load'));
+    document.head.appendChild(s);
+  });
+}
+async function ocrWorker(){
+  if(ocrWorkerP) return ocrWorkerP;
+  ocrWorkerP = (async ()=>{
+    if(!window.Tesseract) await ocrLoadScript(OCR_CDN);
+    if(!window.Tesseract) throw new Error('ocr-load');
+    return window.Tesseract.createWorker('kor+eng', 1, {
+      logger: m => {
+        if(!m || !m.status) return;
+        if(m.status === 'recognizing text'){
+          const span = 100 / Math.max(1, ocrFiles.length);
+          ocrSetState(OCR_LABEL[m.status] || m.status, Math.min(99, ocrBase + (m.progress || 0) * span));
+        }else if(OCR_LABEL[m.status]){
+          ocrSetState(OCR_LABEL[m.status], Math.max(2, ocrBase + 1));
+        }
+      }
+    });
+  })();
+  ocrWorkerP.catch(()=>{ ocrWorkerP = null; });
+  return ocrWorkerP;
+}
+/* 카톡 화면에서 글자만 남기기: 시간·날짜·읽음 같은 군더더기 제거 */
+function cleanKakaoText(raw){
+  const isTime = s => /^(오전|오후)?\s*\d{1,2}:\d{2}$/.test(s);
+  const isDate = s => /^\d{4}년\s*\d{1,2}월\s*\d{1,2}일/.test(s)
+    || /^\d{1,2}월\s*\d{1,2}일\s*(오전|오후)?\s*\d{1,2}:\d{2}/.test(s);
+  const out = [];
+  String(raw || '').replace(/\r/g, '').split('\n').forEach(line=>{
+    let s = line.replace(/\s+/g, ' ').trim();
+    if(!s) return;
+    if(isTime(s) || isDate(s)) return;
+    if(s === '읽음') return;
+    s = s.replace(/\s*(오전|오후)\s*\d{1,2}:\d{2}\s*$/, '').trim();
+    if(!s) return;
+    if(out.length && out[out.length - 1] === s) return;
+    out.push(s);
+  });
+  return out;
+}
+function ocrThumbClear(){
+  ocrUrls.forEach(u=>{ try{ URL.revokeObjectURL(u); }catch(e){} });
+  ocrUrls = [];
+  ocrEl('ocrThumbs').innerHTML = '';
+}
+function ocrResetPanel(){
+  ocrThumbClear();
+  ocrText = '';
+  ocrFiles = [];
+  const p = document.getElementById('ocrPanel');
+  const a = document.getElementById('ocrActs');
+  if(p) p.hidden = true;
+  if(a) a.hidden = true;
+  ocrSetState('대기 중', null);
+}
+async function ocrRun(files){
+  ocrFiles = files;
+  ocrText = '';
+  ocrThumbClear();
+  const thumbs = ocrEl('ocrThumbs');
+  ocrFiles.forEach(f=>{
+    const u = URL.createObjectURL(f);
+    ocrUrls.push(u);
+    const img = document.createElement('img');
+    img.src = u; img.alt = '';
+    thumbs.appendChild(img);
+  });
+  ocrEl('ocrPanel').hidden = false;
+  ocrEl('ocrActs').hidden = true;
+  ocrBase = 3;
+  ocrSetState('준비 중…', 3);
+  try{
+    const worker = await ocrWorker();
+    const parts = [];
+    for(let i = 0; i < ocrFiles.length; i++){
+      ocrBase = (i / ocrFiles.length) * 100;
+      ocrSetState(`${i + 1}/${ocrFiles.length}장 읽는 중`, ocrBase + 1);
+      const { data } = await worker.recognize(ocrUrls[i]);
+      parts.push(data.text || '');
+    }
+    const lines = cleanKakaoText(parts.join('\n'));
+    ocrSetState(lines.length ? `인식 완료 · ${lines.length}줄` : '글자를 찾지 못했어요', 100);
+    ocrEl('ocrActs').hidden = false;
+    if(!lines.length){ toast('글자를 못 찾았어요 · 메모에 직접 적어주세요'); return; }
+    ocrText = lines.join('\n');
+    F.memo().value = ocrText;
+    toast('카톡 내용을 메모에 넣었어요 📸');
+  }catch(e){
+    ocrSetState('인식에 실패했어요 · 직접 입력해 주세요', 100);
+    ocrEl('ocrActs').hidden = false;
+    toast('카톡 인식이 안 됐어요 · 직접 적어도 문제없어요');
+  }
+}
+function ocrSplitInto(cuts){
+  if(!cuts.length) return;
+  form.cuts = cuts.slice();
+  buildCutFields(cuts.length);
+  document.querySelectorAll('#fCuts textarea').forEach((ta, i)=>{
+    ta.value = cuts[i] || '';
+    autosize(ta);
+  });
+}
+function ocrSplitCuts(){
+  const src = (ocrText || F.memo().value || '').trim();
+  const lines = src.split('\n').map(s=>s.trim()).filter(Boolean);
+  if(!lines.length){ toast('먼저 카톡 캡처를 넣어주세요'); return; }
+  const groups = Math.min(4, lines.length);
+  const per = Math.ceil(lines.length / groups);
+  const cuts = [];
+  for(let i = 0; i < lines.length; i += per) cuts.push(lines.slice(i, i + per).join(' / '));
+  ocrSplitInto(cuts.slice(0, 9));
+  toast(`${groups}컷으로 나눴어요 🪄 메모는 카톡 원문 그대로`);
+}
+function formAsItem(){
+  return {
+    title: F.title().value.trim() || '(제목 없음)',
+    author: form.author,
+    cast: effectiveCast(),
+    category: form.category,
+    status: form.status,
+    cuts: [...document.querySelectorAll('#fCuts textarea')].map(t=>t.value.trim()),
+    memo: F.memo().value.trim(),
+    tags: normTags(F.tags().value),
+    updated_at: nowISO()
+  };
+}
+
 /* ---------- 인물 카드 (모생 유니버스) ---------- */
 let profileName = null;
 function episodesOf(name){
@@ -1395,6 +1599,25 @@ document.getElementById('sDone').addEventListener('click', ()=>closeSheet('shSet
 document.getElementById('edClose').addEventListener('click', ()=>closeSheet('shEditor','bdEditor'));
 document.getElementById('edCancel').addEventListener('click', ()=>closeSheet('shEditor','bdEditor'));
 document.getElementById('edSave').addEventListener('click', saveEditor);
+
+/* 카톡 캡처 OCR */
+document.getElementById('ocrPick').addEventListener('click', ()=>document.getElementById('ocrFile').click());
+document.getElementById('ocrFile').addEventListener('change', e=>{
+  const files = Array.from(e.target.files || []).filter(f=>/^image\//.test(f.type));
+  e.target.value = '';
+  if(!files.length){ toast('이미지 파일을 골라주세요'); return; }
+  ocrRun(files);
+});
+document.getElementById('ocrSplit').addEventListener('click', ocrSplitCuts);
+document.getElementById('ocrCopy').addEventListener('click', ()=>copyText(buildCopyText(formAsItem())));
+document.getElementById('ocrClear').addEventListener('click', ()=>{
+  ocrThumbClear();
+  ocrEl('ocrPanel').hidden = true;
+  ocrEl('ocrActs').hidden = true;
+  ocrText = '';
+  ocrFiles = [];
+  ocrSetState('대기 중', null);
+});
 document.getElementById('dClose').addEventListener('click', ()=>closeSheet('shDetail','bdDetail'));
 document.getElementById('dEdit').addEventListener('click', ()=>{
   const id = detailId;
@@ -1453,8 +1676,7 @@ document.addEventListener('keydown', e=>{
   }
 });
 
-document.getElementById('fAuthor').addEventListener('click', e=>{
-  const b = e.target.closest('button[data-v]');
+document.getElementById('fAuthor').addEventListener('click', e=>{  const b = e.target.closest('button[data-v]');
   if(!b) return;
   form.author = b.dataset.v; paintForm();
 });
