@@ -189,10 +189,11 @@ img{max-width:100%}
   letter-spacing:-1px;line-height:1.1;
 }
 .pc-name .mb{font-family:var(--body);font-size:10.5px;font-weight:700;color:#FFF8EE;background:var(--ginger);border-radius:999px;padding:2px 8px;letter-spacing:0}
-.pc-rel{font-size:12px;color:var(--ink-soft);margin:5px 0 0;letter-spacing:-.2px;line-height:1.45}
+.pc-rel{font-size:12px;color:var(--ink-soft);margin:5px 0 0;letter-spacing:-.2px;line-height:1.45;word-break:keep-all}
 .pc-line{
   margin:0 0 13px;background:#FDF6E8;border:1px dashed var(--quince-line);border-radius:14px;
   padding:11px 13px;font-size:13px;line-height:1.65;color:#6B5A48;letter-spacing:-.2px;
+  word-break:keep-all;
 }
 .pc-line .q{color:var(--ginger);font-family:var(--hand);font-size:15px;margin-right:2px}
 .pc-eps .lb{font-size:11.5px;color:var(--ink-soft);display:block;margin-bottom:6px;letter-spacing:-.2px}
@@ -803,6 +804,14 @@ const CHARACTERS = [
 ];
 const charOf = name => CHARACTERS.find(c=>c.name===name);
 const CAST_NAMES = CHARACTERS.map(c=>c.name);
+/* 한글 조사: 받침 있으면 앞의 것, 없으면 뒤의 것 (멜론이 / 자두가) */
+function josa(name, withJong, withoutJong){
+  const s = String(name || '').trim();
+  if(!s) return withoutJong;
+  const code = s.charCodeAt(s.length - 1);
+  if(code >= 0xAC00 && code <= 0xD7A3) return ((code - 0xAC00) % 28) ? withJong : withoutJong;
+  return withJong;
+}
 /* 저장된 cast가 없으면 기존 author 기준으로 등장인물을 추정 (이전 데이터 호환) */
 function castOf(it){
   if(!it) return [];
@@ -1034,7 +1043,7 @@ function renderList(){
     empty.hidden = false;
     if(filter.cast){
       empty.querySelector('b').textContent = `${filter.cast} 나오는 편이 아직 없어요`;
-      empty.querySelector('p').innerHTML = `새 글콘티에서 등장인물에 <b>${filter.cast}</b>를 넣어두면 여기 모여요.`;
+      empty.querySelector('p').innerHTML = `새 글콘티에서 등장인물에 <b>${filter.cast}${josa(filter.cast,'을','를')}</b> 넣어두면 여기 모여요.`;
     }else{
       empty.querySelector('b').textContent = hasFilter ? '조건에 맞는 콘티가 없어요' : '아직 콘티가 없어요';
       empty.querySelector('p').innerHTML = hasFilter ? '필터를 풀거나 다른 단어로 찾아볼까요?' : '머릿속에 떠오른 썰, 지금 적어두면<br>다음에 그릴 때 바로 꺼낼 수 있어요.';
@@ -1333,7 +1342,7 @@ function openProfile(name){
             <span class="tx">${esc(it.title || '(제목 없음)')}</span>
             <span class="go">›</span></button>`).join('')
           + (eps.length > 3 ? `<p class="pc-none">외 ${eps.length-3}편 더 있어요</p>` : '')
-        : `<p class="pc-none">아직 ${c.name}가 나오는 콘티가 없어요.<br>새 글콘티를 쓰면서 등장인물로 골라보세요.</p>`}
+        : `<p class="pc-none">아직 ${c.name}${josa(c.name,'이','가')} 나오는 콘티가 없어요.<br>새 글콘티를 쓰면서 등장인물로 골라보세요.</p>`}
     </div>`;
   const fb = document.getElementById('pcFilter');
   fb.textContent = `${c.name} 콘티 모아보기 (${eps.length}편)`;
