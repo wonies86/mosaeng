@@ -1398,7 +1398,6 @@ async function ocrWorker(){
     if(!window.Tesseract) await ocrLoadScript(OCR_CDN);
     if(!window.Tesseract) throw new Error('ocr-load');
     const w = await window.Tesseract.createWorker('kor+eng', 1, {
-      langPath: 'https://tessdata.projectnaptha.com/4.0.0_best',
       logger: m => {
         if(!m || !m.status) return;
         if(m.status === 'recognizing text'){
@@ -1411,7 +1410,7 @@ async function ocrWorker(){
     });
     try{
       await w.setParameters({
-        tessedit_pageseg_mode: '3',
+        tessedit_pageseg_mode: '4',
         preserve_interword_spaces: '1',
         user_defined_dpi: '300'
       });
