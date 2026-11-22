@@ -1397,7 +1397,7 @@ async function ocrWorker(){
   ocrWorkerP = (async ()=>{
     if(!window.Tesseract) await ocrLoadScript(OCR_CDN);
     if(!window.Tesseract) throw new Error('ocr-load');
-    return window.Tesseract.createWorker('kor+eng', 1, {
+    const w = await window.Tesseract.createWorker('kor+eng', 1, {
       logger: m => {
         if(!m || !m.status) return;
         if(m.status === 'recognizing text'){
@@ -1408,23 +1408,63 @@ async function ocrWorker(){
         }
       }
     });
+    try{
+      await w.setParameters({
+        tessedit_pageseg_mode: '11',
+        preserve_interword_spaces: '1'
+      });
+    }catch(e){}
+    return w;
   })();
   ocrWorkerP.catch(()=>{ ocrWorkerP = null; });
   return ocrWorkerP;
 }
+/* 작은 캡처는 키워서 넘기면 한글 인식률이 올라감 */
+function ocrPrepare(url){
+  return new Promise(resolve=>{
+    const img = new Image();
+    img.onload = ()=>{
+      try{
+        const scale = Math.min(3, Math.max(1, 1500 / img.naturalWidth));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.naturalWidth * scale);
+        c.height = Math.round(img.naturalHeight * scale);
+        const ctx = c.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        resolve(c);
+      }catch(e){ resolve(url); }
+    };
+    img.onerror = ()=>resolve(url);
+    img.src = url;
+  });
+}
+/* 인식 결과에서 줄 단위로 뽑기 (블록이 없으면 text 사용) */
+function ocrLinesOf(data){
+  const out = [];
+  try{
+    (data.blocks || []).forEach(b=>{
+      (b.paragraphs || []).forEach(par=>{
+        (par.lines || []).forEach(l=>{ if(l && l.text) out.push(l.text); });
+      });
+    });
+  }catch(e){}
+  return out.length ? out : String((data && data.text) || '').split('\n');
+}
 /* 카톡 화면에서 글자만 남기기: 시간·날짜·읽음 같은 군더더기 제거 */
 function cleanKakaoText(raw){
-  const isTime = s => /^(오전|오후)?\s*\d{1,2}:\d{2}$/.test(s);
-  const isDate = s => /^\d{4}년\s*\d{1,2}월\s*\d{1,2}일/.test(s)
-    || /^\d{1,2}월\s*\d{1,2}일\s*(오전|오후)?\s*\d{1,2}:\d{2}/.test(s);
+  const stripTime = s => s.replace(/(오전|오후)?\s*\d{1,2}:\d{2}\s*/g, ' ').replace(/\s+/g, ' ').trim();
+  const isDate = s => /^\d{4}년\s*\d{1,2}월\s*\d{1,2}일/.test(s);
   const out = [];
   String(raw || '').replace(/\r/g, '').split('\n').forEach(line=>{
     let s = line.replace(/\s+/g, ' ').trim();
     if(!s) return;
-    if(isTime(s) || isDate(s)) return;
-    if(s === '읽음') return;
-    s = s.replace(/\s*(오전|오후)\s*\d{1,2}:\d{2}\s*$/, '').trim();
+    if(isDate(s)) return;
+    s = stripTime(s);
     if(!s) return;
+    if(s === '읽음') return;
+    if(!/[가-힣]/.test(s) && !/[A-Za-z]{3,}/.test(s)) return;
     if(out.length && out[out.length - 1] === s) return;
     out.push(s);
   });
@@ -1467,8 +1507,9 @@ async function ocrRun(files){
     for(let i = 0; i < ocrFiles.length; i++){
       ocrBase = (i / ocrFiles.length) * 100;
       ocrSetState(`${i + 1}/${ocrFiles.length}장 읽는 중`, ocrBase + 1);
-      const { data } = await worker.recognize(ocrUrls[i]);
-      parts.push(data.text || '');
+      const prepared = await ocrPrepare(ocrUrls[i]);
+      const { data } = await worker.recognize(prepared);
+      parts.push(ocrLinesOf(data).join('\n'));
     }
     const lines = cleanKakaoText(parts.join('\n'));
     ocrSetState(lines.length ? `인식 완료 · ${lines.length}줄` : '글자를 찾지 못했어요', 100);
