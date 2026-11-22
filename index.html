@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBF7F0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="모생일기 콘티">
+<title>모생일기 · 콘티 노트</title>
+<link rel="icon" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF7F0;
+  --paper:#FFFDF8;
+  --quince:#F4C95D;
+  --quince-soft:#FDEFC6;
+  --quince-line:#EDD79A;
+  --ginger:#B5845A;
+  --ginger-deep:#8A6240;
+  --ink:#4A3B2E;
+  --ink-soft:#8B7A69;
+  --line:#EFE3D2;
+  --line-soft:#F5ECE0;
+  --shadow:0 6px 18px rgba(181,132,90,.10);
+  --shadow-lg:0 18px 40px rgba(74,59,46,.18);
+  --hand:'Gaegu','Gowun Dodum',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+  --body:'Gowun Dodum',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  background-color:var(--cream);
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(244,201,93,.14), transparent 42%),
+    radial-gradient(circle at 88% 0%, rgba(181,132,90,.10), transparent 38%),
+    radial-gradient(rgba(181,132,90,.10) 1px, transparent 1px);
+  background-size:auto,auto,18px 18px;
+  color:var(--ink);
+  min-height:100vh;
+  overflow-x:hidden;
+  line-height:1.5;
+}
+button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input,textarea{font-family:inherit;color:inherit}
+img{max-width:100%}
+
+/* ---------- layout ---------- */
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 120px}
+
+/* ---------- header ---------- */
+.topbar{
+  position:sticky;top:0;z-index:30;
+  background:linear-gradient(180deg,rgba(251,247,240,.97),rgba(251,247,240,.90));
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(239,227,210,.85);
+}
+.topbar-in{
+  max-width:760px;margin:0 auto;
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px 11px;
+}
+.brand{display:flex;align-items:center;gap:9px;min-width:0;flex:1}
+.brand-art{
+  height:46px;width:auto;flex:0 0 auto;
+  filter:drop-shadow(0 3px 5px rgba(181,132,90,.18));
+  transform:translateY(1px);
+}
+.brand-txt{min-width:0}
+.brand-txt h1{
+  font-family:var(--hand);font-weight:700;font-size:27px;line-height:1.05;
+  margin:0;color:var(--ginger-deep);letter-spacing:-1.6px;white-space:nowrap;
+}
+.brand-txt h1 em{font-style:normal;color:var(--ink-soft);font-size:18px;font-weight:400;letter-spacing:-.4px;margin-left:1px}
+.brand-txt p{
+  margin:2px 0 0;font-size:11.5px;color:var(--ink-soft);letter-spacing:-.2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.topbar-actions{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.icon-btn{
+  width:38px;height:38px;border-radius:13px;display:grid;place-items:center;
+  background:var(--paper);border:1px solid var(--line);
+  font-size:17px;box-shadow:0 2px 6px rgba(181,132,90,.07);
+  transition:transform .15s ease, background .15s ease;
+}
+.icon-btn:active{transform:scale(.94);background:var(--quince-soft)}
+.sync-dot{
+  display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:#CBBBA8;margin-left:2px;box-shadow:0 0 0 3px rgba(203,187,168,.18);
+}
+.sync-dot.on{background:#7BAE84;box-shadow:0 0 0 3px rgba(123,174,132,.18)}
+.sync-dot.err{background:#DB7C6A;box-shadow:0 0 0 3px rgba(219,124,106,.18)}
+
+/* ---------- summary ---------- */
+.summary{padding:16px 0 4px}
+.summary-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:9px;padding:0 2px}
+.summary-head b{font-family:var(--hand);font-size:20px;font-weight:700;color:var(--ginger-deep);letter-spacing:-.8px}
+.summary-head span{font-size:11.5px;color:var(--ink-soft)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.stat{
+  background:var(--paper);border:1px solid var(--line);border-radius:15px;
+  padding:9px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:1px;
+  box-shadow:0 2px 8px rgba(181,132,90,.05);
+  transition:all .16s ease;
+}
+.stat .em{font-size:15px;line-height:1.2}
+.stat .n{font-family:var(--hand);font-size:20px;font-weight:700;line-height:1;color:var(--ink)}
+.stat .lb{font-size:10.5px;color:var(--ink-soft);letter-spacing:-.3px}
+.stat:active{transform:scale(.97)}
+.stat.active{background:var(--quince-soft);border-color:var(--quince-line);box-shadow:0 3px 12px rgba(244,201,93,.28)}
+.stat.active .n{color:var(--ginger-deep)}
+
+/* ---------- search + chips ---------- */
+.searchbar{padding:14px 0 0}
+.searchbox{
+  display:flex;align-items:center;gap:8px;
+  background:var(--paper);border:1px solid var(--line);border-radius:15px;
+  padding:0 12px;height:44px;box-shadow:var(--shadow);
+}
+.searchbox span{font-size:14px;opacity:.55}
+.searchbox input{
+  flex:1;min-width:0;border:0;background:transparent;outline:none;
+  font-size:14px;padding:0;color:var(--ink);
+}
+.searchbox input::placeholder{color:#B9AB9C}
+.searchbox .clear{font-size:13px;color:var(--ink-soft);padding:4px 2px;display:none}
+.searchbox.has-text .clear{display:block}
+
+.catbar{
+  display:flex;gap:7px;padding:11px 0 3px;
+  overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  margin:0 -16px;padding-left:16px;padding-right:16px;
+  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 16px,#000 calc(100% - 22px),transparent 100%);
+  mask-image:linear-gradient(to right,transparent 0,#000 16px,#000 calc(100% - 22px),transparent 100%);
+}
+.catbar::-webkit-scrollbar{display:none}
+.chip{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;
+  background:var(--paper);border:1px solid var(--line);border-radius:999px;
+  padding:7px 12px;font-size:12.5px;color:var(--ink-soft);letter-spacing:-.3px;
+  transition:all .15s ease;white-space:nowrap;
+}
+.chip:active{transform:scale(.96)}
+.chip.active{background:var(--ginger);border-color:var(--ginger);color:#FFF8EE;box-shadow:0 3px 10px rgba(181,132,90,.24)}
+
+/* ---------- list ---------- */
+.listhead{display:flex;align-items:center;justify-content:space-between;margin:16px 2px 8px}
+.listhead b{font-family:var(--hand);font-size:19px;color:var(--ginger-deep);font-weight:700;letter-spacing:-.8px}
+.listhead .cnt{font-size:11.5px;color:var(--ink-soft)}
+.list{display:grid;grid-template-columns:1fr;gap:10px}
+.card{
+  position:relative;background:var(--paper);border:1px solid var(--line);border-radius:17px;
+  padding:13px 14px 11px;box-shadow:var(--shadow);cursor:pointer;
+  transition:transform .16s ease, box-shadow .16s ease;
+  overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:var(--quince);opacity:.85;
+}
+.card[data-status="conti"]::before{background:#A8C79A}
+.card[data-status="making"]::before{background:#EDB08C}
+.card[data-status="done"]::before{background:#8FB7A4}
+.card:active{transform:scale(.987)}
+.card-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:5px}
+.pill{
+  display:inline-flex;align-items:center;gap:3px;border-radius:8px;
+  padding:2.5px 8px;font-size:11px;letter-spacing:-.3px;white-space:nowrap;
+}
+.pill.idea{background:#FDF3D2;color:#8A6A1F}
+.pill.conti{background:#EAF2E4;color:#5B7A45}
+.pill.making{background:#FCE9DE;color:#B4633A}
+.pill.done{background:#E4EFEA;color:#4E7A63}
+.cat-tag{font-size:11px;color:var(--ink-soft);letter-spacing:-.3px;white-space:nowrap}
+.card-title{
+  font-size:15.5px;font-weight:700;line-height:1.35;letter-spacing:-.4px;
+  margin:0 0 4px;color:var(--ink);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.card-excerpt{
+  margin:0 0 9px;font-size:12.5px;line-height:1.5;color:#7E6E5E;letter-spacing:-.2px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.card-excerpt .n{color:var(--ginger);font-weight:700;margin-right:3px}
+.card-foot{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--ink-soft)}
+.who{display:inline-flex;align-items:center;gap:5px}
+.who img{width:19px;height:19px;border-radius:50%;background:#F4EDE2;object-fit:cover}
+.who .duo{display:inline-flex}
+.who .duo img:last-child{margin-left:-7px}
+.dot-sep{width:2px;height:2px;border-radius:50%;background:#CBBBA8}
+.card-foot .right{margin-left:auto;display:inline-flex;align-items:center;gap:8px}
+.cutcount{background:#FBF3E5;border-radius:6px;padding:1.5px 6px;font-size:10.5px;color:var(--ginger-deep)}
+
+.empty{
+  text-align:center;padding:38px 16px 30px;color:var(--ink-soft);
+}
+.empty img{width:118px;opacity:.95;margin-bottom:8px}
+.empty b{display:block;font-family:var(--hand);font-size:19px;color:var(--ginger-deep);margin-bottom:4px}
+.empty p{margin:0;font-size:12.5px;line-height:1.6}
+
+/* ---------- fab ---------- */
+.fab{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(16px + var(--safe-b));z-index:40;
+  width:calc(100% - 32px);max-width:420px;height:52px;border-radius:17px;
+  background:linear-gradient(180deg,#C4936A,#B5845A);
+  color:#FFF9F1;font-size:15px;font-weight:700;letter-spacing:-.2px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  box-shadow:0 10px 24px rgba(138,98,64,.32), inset 0 1px 0 rgba(255,255,255,.28);
+  transition:transform .15s ease;
+}
+.fab:active{transform:translateX(-50%) scale(.975)}
+
+/* ---------- sheets ---------- */
+.backdrop{
+  position:fixed;inset:0;z-index:60;background:rgba(63,48,35,.34);
+  opacity:0;pointer-events:none;transition:opacity .22s ease;
+  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+}
+.backdrop.open{opacity:1;pointer-events:auto}
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:61;
+  margin:0 auto;max-width:600px;
+  background:var(--paper);border-radius:24px 24px 0 0;
+  box-shadow:var(--shadow-lg);
+  max-height:92vh;display:flex;flex-direction:column;
+  transform:translateY(102%);transition:transform .28s cubic-bezier(.22,1,.36,1);
+  overflow:hidden;
+}
+.sheet.open{transform:translateY(0)}
+.sheet-head{
+  flex:0 0 auto;padding:8px 16px 10px;border-bottom:1px solid var(--line-soft);
+  position:relative;
+}
+.grab{width:38px;height:4px;border-radius:2px;background:#E4D6C4;margin:0 auto 8px}
+.sheet-title-row{display:flex;align-items:center;gap:8px}
+.sheet-title-row h2{
+  font-family:var(--hand);font-size:22px;font-weight:700;margin:0;color:var(--ginger-deep);
+  letter-spacing:-.9px;flex:1;min-width:0;
+}
+.sheet-close{
+  width:32px;height:32px;border-radius:11px;display:grid;place-items:center;
+  background:#F7EFE4;color:var(--ink-soft);font-size:15px;flex:0 0 auto;
+}
+.sheet-body{
+  flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain;
+  padding:14px 16px 4px;-webkit-overflow-scrolling:touch;
+}
+.sheet-foot{
+  flex:0 0 auto;padding:10px 16px calc(12px + var(--safe-b));
+  border-top:1px solid var(--line-soft);background:linear-gradient(180deg,rgba(255,253,248,.92),#FFFDF8);
+  display:flex;gap:8px;align-items:center;
+}
+
+/* ---------- form ---------- */
+.field{margin-bottom:15px}
+.flabel{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:12px;color:var(--ink-soft);margin-bottom:6px;letter-spacing:-.2px;padding-left:2px;
+}
+.flabel b{font-weight:700;color:var(--ginger-deep);font-size:12.5px}
+.flabel .hint{font-size:10.5px;color:#B3A492}
+.tinput,.tarea{
+  width:100%;border:1px solid var(--line);background:#FFFCF6;border-radius:13px;
+  padding:11px 12px;font-size:14px;line-height:1.55;outline:none;color:var(--ink);
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.tinput::placeholder,.tarea::placeholder{color:#BCAE9E}
+.tinput:focus,.tarea:focus{border-color:var(--quince);box-shadow:0 0 0 3px rgba(244,201,93,.22);background:#FFFDF8}
+.tinput{height:44px}
+.tarea{resize:none;min-height:64px;display:block}
+.seg{display:flex;gap:6px}
+.seg button{
+  flex:1;height:42px;border-radius:12px;background:#FFFCF6;border:1px solid var(--line);
+  font-size:13px;color:var(--ink-soft);display:flex;align-items:center;justify-content:center;gap:5px;
+  transition:all .15s ease;padding:0 4px;
+}
+.seg button img{width:20px;height:20px;border-radius:50%;object-fit:cover}
+.seg button .pair{display:inline-flex}
+.seg button .pair img:last-child{margin-left:-6px}
+.seg button.active{background:var(--quince-soft);border-color:var(--quince-line);color:var(--ginger-deep);font-weight:700}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opt{
+  padding:8px 11px;border-radius:11px;background:#FFFCF6;border:1px solid var(--line);
+  font-size:12.5px;color:var(--ink-soft);letter-spacing:-.3px;transition:all .15s ease;
+}
+.opt.active{background:var(--ginger);border-color:var(--ginger);color:#FFF8EE;font-weight:700}
+.opt:active{transform:scale(.97)}
+
+.cuts{display:grid;gap:8px}
+.cutrow{
+  display:flex;gap:9px;align-items:flex-start;
+  background:#FFFCF6;border:1px solid var(--line);border-radius:14px;padding:9px 10px;
+  transition:border-color .15s ease, background .15s ease;
+}
+.cutrow:focus-within{border-color:var(--quince);background:#FFFDF8;box-shadow:0 0 0 3px rgba(244,201,93,.18)}
+.cutno{
+  flex:0 0 auto;width:34px;height:26px;border-radius:8px;background:var(--quince-soft);
+  color:var(--ginger-deep);font-family:var(--hand);font-weight:700;font-size:13px;
+  display:grid;place-items:center;margin-top:1px;
+}
+.cutrow textarea{
+  flex:1;min-width:0;border:0;background:transparent;outline:none;resize:none;
+  font-size:13.5px;line-height:1.55;min-height:44px;padding:3px 0 0;color:var(--ink);
+}
+.cutrow textarea::placeholder{color:#C3B5A5;font-size:12.5px}
+
+.btn{
+  height:46px;border-radius:14px;font-size:14.5px;font-weight:700;letter-spacing:-.2px;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 16px;
+  transition:transform .14s ease, filter .14s ease;
+}
+.btn:active{transform:scale(.98)}
+.btn-primary{flex:1;background:linear-gradient(180deg,#C4936A,#B5845A);color:#FFF9F1;box-shadow:0 8px 18px rgba(138,98,64,.26), inset 0 1px 0 rgba(255,255,255,.24)}
+.btn-ghost{background:#F7EFE4;color:var(--ink-soft)}
+.btn-danger{background:#FBE9E4;color:#B4563F}
+.btn-line{background:var(--quince-soft);color:var(--ginger-deep);border:1px solid var(--quince-line)}
+.btn-sm{height:36px;border-radius:11px;font-size:12.5px;font-weight:700;padding:0 12px}
+
+/* ---------- detail ---------- */
+.d-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:12px 16px 10px;font-size:11.5px;color:var(--ink-soft);border-bottom:1px solid var(--line-soft)}
+.d-meta .who img{width:22px;height:22px}
+.d-meta .grow{flex:1}
+.d-body{padding:14px 16px 6px}
+.d-title{
+  font-size:19px;font-weight:700;line-height:1.4;letter-spacing:-.5px;margin:0 0 12px;
+}
+.d-cut{
+  display:flex;gap:10px;padding:11px 12px;background:#FFFCF6;border:1px solid var(--line);
+  border-radius:14px;margin-bottom:8px;
+}
+.d-cut .cutno{width:36px;height:24px;font-size:12.5px;margin-top:0}
+.d-cut p{margin:0;font-size:13.5px;line-height:1.65;white-space:pre-wrap;word-break:break-word;flex:1;color:#57483A;padding-top:1px}
+.d-memo{
+  margin-top:4px;background:#FDF6E8;border:1px dashed var(--quince-line);border-radius:14px;
+  padding:11px 12px;font-size:13px;line-height:1.65;white-space:pre-wrap;word-break:break-word;color:#6B5A48;
+}
+.d-memo .lb{display:block;font-size:11px;color:var(--ginger);margin-bottom:3px;letter-spacing:-.2px}
+.d-tags{margin:11px 0 2px;font-size:12.5px;color:var(--ginger-deep);letter-spacing:-.2px;word-break:break-word}
+.d-status{margin:14px 0 6px}
+.d-status .lb{font-size:12px;color:var(--ink-soft);margin-bottom:7px;display:block;padding-left:2px}
+.d-actions{display:flex;gap:8px;margin-top:12px}
+.d-actions .btn{flex:1}
+.d-hint{font-size:11px;color:#B3A492;text-align:center;margin:10px 0 0;line-height:1.5}
+
+/* ---------- settings ---------- */
+.set-card{background:#FFFCF6;border:1px solid var(--line);border-radius:15px;padding:13px;margin-bottom:12px}
+.set-card h3{font-family:var(--hand);font-size:18px;margin:0 0 3px;color:var(--ginger-deep);font-weight:700;letter-spacing:-.6px}
+.set-card .desc{font-size:11.5px;color:var(--ink-soft);line-height:1.6;margin:0 0 10px}
+.set-card .tinput{margin-bottom:7px;font-size:13px;height:42px}
+.set-row{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+.set-state{font-size:11.5px;color:var(--ink-soft);margin-top:8px;display:flex;align-items:center;gap:5px;line-height:1.5}
+.set-state.ok{color:#4E7A63}
+.set-state.err{color:#B4563F}
+.set-state.warn{color:#9A7B4E}
+details.howto{font-size:11.5px;color:var(--ink-soft);line-height:1.7;margin-top:10px}
+details.howto summary{cursor:pointer;color:var(--ginger);font-weight:700;font-size:12px}
+details.howto ol{padding-left:17px;margin:7px 0 0}
+details.howto li{margin-bottom:4px}
+code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* ---------- toast ---------- */
+.toast{
+  position:fixed;left:50%;bottom:calc(80px + var(--safe-b));transform:translate(-50%,14px);
+  background:#4A3B2E;color:#FFF8EE;border-radius:12px;padding:10px 15px;font-size:12.5px;
+  letter-spacing:-.2px;box-shadow:0 10px 24px rgba(74,59,46,.28);
+  opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;z-index:90;
+  max-width:calc(100% - 40px);text-align:center;line-height:1.45;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (min-width:760px){
+  .wrap{padding:0 20px 130px}
+  .topbar-in{padding:12px 20px}
+  .brand-art{height:54px}
+  .brand-txt h1{font-size:29px}
+  .brand-txt p{font-size:12px}
+  .list{grid-template-columns:1fr 1fr;gap:12px}
+  .stats{gap:9px}
+  .stat{padding:12px 6px 10px}
+  .stat .n{font-size:23px}
+  .stat .lb{font-size:11.5px}
+  .fab{left:auto;right:24px;transform:none;width:auto;max-width:none;padding:0 24px;border-radius:16px}
+  .fab:active{transform:scale(.975)}
+  .backdrop{backdrop-filter:blur(3px)}
+  .sheet{
+    left:50%;right:auto;bottom:auto;top:50%;
+    transform:translate(-50%,-46%) scale(.97);
+    width:min(560px,calc(100vw - 48px));max-height:86vh;
+    border-radius:22px;opacity:0;transition:transform .24s ease, opacity .2s ease;
+  }
+  .sheet.open{transform:translate(-50%,-50%) scale(1);opacity:1}
+  .grab{display:none}
+  .sheet-head{padding-top:16px}
+  body.sheet-open{overflow:hidden}
+}
+@media (max-width:359px){
+  .brand-art{height:40px}
+  .brand-txt h1{font-size:22px}
+  .brand-txt h1 em{font-size:16px}
+  .stat .lb{font-size:9.5px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <img class="brand-art" src="assets/mosaeng_couple.png" alt="모과와 생강 캐릭터">
+      <div class="brand-txt">
+        <h1>모생일기 <em>· 콘티 노트</em></h1>
+        <p>모과 &amp; 생강의 썰 보관함</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="btnSettings" aria-label="연동 설정">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#B5845A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3.1"></circle>
+          <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.56V21a2 2 0 1 1-4 0v-.11a1.7 1.7 0 0 0-1.11-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1H3a2 2 0 1 1 0-4h.11a1.7 1.7 0 0 0 1.56-1.11 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1-1.56V3a2 2 0 1 1 4 0v.11a1.7 1.7 0 0 0 1 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.56 1H21a2 2 0 1 1 0 4h-.11a1.7 1.7 0 0 0-1.56 1z"></path>
+        </svg>
+        <span class="sync-dot" id="syncDot" hidden></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="summary">
+    <div class="summary-head">
+      <b>오늘의 콘티</b>
+      <span id="totalLabel">전체 0편</span>
+    </div>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <div class="searchbar">
+    <div class="searchbox" id="searchBox">
+      <span>🔍</span>
+      <input id="q" type="search" placeholder="제목·대사·태그로 찾기" autocomplete="off" enterkeyhint="search">
+      <button class="clear" id="qClear" aria-label="검색어 지우기">✕</button>
+    </div>
+  </div>
+
+  <div class="catbar" id="catChips"></div>
+
+  <div class="listhead">
+    <b id="listTitle">콘티 목록</b>
+    <span class="cnt" id="listCount"></span>
+  </div>
+  <div class="list" id="list"></div>
+  <div class="empty" id="empty" hidden>
+    <img src="assets/mosaeng_couple.png" alt="">
+    <b>아직 콘티가 없어요</b>
+    <p>머릿속에 떠오른 썰, 지금 적어두면<br>다음에 그릴 때 바로 꺼낼 수 있어요.</p>
+  </div>
+</div>
+
+<button class="fab" id="btnNew">✏️ 새 글콘티 쓰기</button>
+
+<!-- ============ editor ============ -->
+<div class="backdrop" id="bdEditor" data-close="editor"></div>
+<section class="sheet" id="shEditor" role="dialog" aria-modal="true" aria-labelledby="edTitle">
+  <div class="sheet-head">
+    <div class="grab"></div>
+    <div class="sheet-title-row">
+      <h2 id="edTitle">새 글콘티</h2>
+      <button class="sheet-close" id="edClose" aria-label="닫기">✕</button>
+    </div>
+  </div>
+  <div class="sheet-body">
+    <div class="field">
+      <div class="flabel"><b>제목</b><span class="hint">예: EP.03 생강의 첫 요리</span></div>
+      <input class="tinput" id="fTitle" placeholder="이번 편 제목을 적어주세요" maxlength="80">
+    </div>
+
+    <div class="field">
+      <div class="flabel"><b>작성자</b></div>
+      <div class="seg" id="fAuthor">
+        <button data-v="모과"><img src="assets/avatar_mogwa.png" alt="">모과</button>
+        <button data-v="생강"><img src="assets/avatar_saenggang.png" alt="">생강</button>
+        <button data-v="함께"><span class="pair"><img src="assets/avatar_mogwa.png" alt=""><img src="assets/avatar_saenggang.png" alt=""></span>함께</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="flabel"><b>카테고리</b></div>
+      <div class="opts" id="fCategory"></div>
+    </div>
+
+    <div class="field">
+      <div class="flabel"><b>진행 상태</b></div>
+      <div class="opts" id="fStatus"></div>
+    </div>
+
+    <div class="field">
+      <div class="flabel"><b>1~4컷 글콘티</b><span class="hint">상황·대사·표정 자유롭게</span></div>
+      <div class="cuts" id="fCuts"></div>
+    </div>
+
+    <div class="field">
+      <div class="flabel"><b>자유 메모</b><span class="hint">아이디어·소재 메모</span></div>
+      <textarea class="tarea" id="fMemo" rows="3" placeholder="예: 실제 있었던 일 그대로 쓰기, 마지막 컷에 생강 리액션 살리기"></textarea>
+    </div>
+
+    <div class="field" style="margin-bottom:8px">
+      <div class="flabel"><b>해시태그</b><span class="hint">띄어쓰기로 구분</span></div>
+      <input class="tinput" id="fTags" placeholder="#캠핑 #방구썰 #커플일상" maxlength="120">
+    </div>
+  </div>
+  <div class="sheet-foot">
+    <button class="btn btn-danger btn-sm" id="edDelete" hidden>삭제</button>
+    <button class="btn btn-ghost" id="edCancel">취소</button>
+    <button class="btn btn-primary" id="edSave">저장하기</button>
+  </div>
+</section>
+
+<!-- ============ detail ============ -->
+<div class="backdrop" id="bdDetail" data-close="detail"></div>
+<section class="sheet" id="shDetail" role="dialog" aria-modal="true" aria-labelledby="dTitle">
+  <div class="sheet-head">
+    <div class="grab"></div>
+    <div class="sheet-title-row">
+      <h2 id="dHead">콘티 자세히</h2>
+      <button class="sheet-close" id="dClose" aria-label="닫기">✕</button>
+    </div>
+  </div>
+  <div class="sheet-body" id="dBody"></div>
+  <div class="sheet-foot">
+    <button class="btn btn-line" id="dEdit">✏️ 수정</button>
+    <button class="btn btn-primary" id="dCopy">📋 시루에게 제작 요청 복사</button>
+  </div>
+</section>
+
+<!-- ============ settings ============ -->
+<div class="backdrop" id="bdSet" data-close="set"></div>
+<section class="sheet" id="shSet" role="dialog" aria-modal="true" aria-labelledby="sTitle">
+  <div class="sheet-head">
+    <div class="grab"></div>
+    <div class="sheet-title-row">
+      <h2 id="sTitle">연동 · 백업 설정</h2>
+      <button class="sheet-close" id="sClose" aria-label="닫기">✕</button>
+    </div>
+  </div>
+  <div class="sheet-body">
+    <div class="set-card">
+      <h3>☁️ 두 사람 폰에서 같이 쓰기</h3>
+      <p class="desc">Supabase 무료 프로젝트를 하나 만들고 <b>URL</b>과 <b>anon key</b>를 넣으면, 모과·생강 폰에서 같은 콘티가 실시간으로 맞춰져요. 넣지 않으면 이 폰에만 저장됩니다.</p>
+      <input class="tinput" id="sUrl" placeholder="https://xxxxxxxx.supabase.co" autocomplete="off" spellcheck="false">
+      <input class="tinput" id="sKey" placeholder="anon public key (eyJhbGciOi...)" autocomplete="off" spellcheck="false">
+      <div class="set-row">
+        <button class="btn btn-line btn-sm" id="sConnect">연결하기</button>
+        <button class="btn btn-ghost btn-sm" id="sDisconnect">연결 해제</button>
+      </div>
+      <div class="set-state" id="sState">아직 연결하지 않았어요 · 이 폰에만 저장 중</div>
+      <div class="set-row">
+        <button class="btn btn-ghost btn-sm" id="sCopyCode">설정 코드 복사</button>
+        <button class="btn btn-ghost btn-sm" id="sPasteCode">코드로 불러오기</button>
+      </div>
+      <details class="howto">
+        <summary>Supabase 준비 방법 (5분)</summary>
+        <ol>
+          <li>supabase.com 로그인 → <b>New project</b> 만들기</li>
+          <li>왼쪽 <b>SQL Editor</b>에 <code>supabase_schema.sql</code> 내용 붙여넣고 <b>Run</b></li>
+          <li><b>Project Settings → API</b>에서 <b>Project URL</b>과 <b>anon public</b> 키를 복사</li>
+          <li>위 두 칸에 붙여넣고 <b>연결하기</b> → 생강 폰에는 <b>설정 코드</b>를 복사해 보내면 끝</li>
+        </ol>
+      </details>
+    </div>
+
+    <div class="set-card">
+      <h3>💾 백업 · 옮기기</h3>
+      <p class="desc">콘티 전부를 JSON 파일로 내려받거나, 받은 파일을 그대로 불러올 수 있어요.</p>
+      <div class="set-row">
+        <button class="btn btn-ghost btn-sm" id="sExport">JSON 내보내기</button>
+        <button class="btn btn-ghost btn-sm" id="sImportBtn">JSON 가져오기</button>
+        <input type="file" id="sImportFile" accept="application/json,.json" hidden>
+      </div>
+    </div>
+
+    <div class="set-card">
+      <h3>📖 이렇게 써요</h3>
+      <p class="desc" style="margin-bottom:4px">· 떠오를 때 <b>새 글콘티</b>로 1~4컷을 후다닥 적기<br>· 그린 뒤엔 상태를 <b>제작중 → 발행완료</b>로 원클릭 변경<br>· <b>📋 시루에게 제작 요청 복사</b> → 채팅에 붙여넣으면 바로 인스타툰 제작<br>· 카드 왼쪽 색 띠가 진행 상태를 알려줘요</p>
+    </div>
+  </div>
+  <div class="sheet-foot">
+    <button class="btn btn-primary" id="sDone">닫기</button>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   모생일기 · 콘티 노트
+   - 저장: localStorage(즉시) + 선택적 Supabase 실시간 동기화
+   ========================================================= */
+const LS_ITEMS = 'mosaeng.items.v1';
+const LS_SET = 'mosaeng.settings.v1';
+const TABLE = 'mosaeng_contis';
+
+const CATS = [
+  {key:'wedding', label:'결혼준비',     emoji:'💍'},
+  {key:'daily',   label:'동거·일상',    emoji:'🏠'},
+  {key:'trip',    label:'캠핑·낚시·여행', emoji:'🏕️'},
+  {key:'diet',    label:'다이어트',     emoji:'🥗'}
+];
+const STATS = [
+  {key:'idea',   label:'아이디어', emoji:'💡'},
+  {key:'conti',  label:'콘티완료', emoji:'✏️'},
+  {key:'making', label:'제작중',   emoji:'🎨'},
+  {key:'done',   label:'발행완료', emoji:'✅'}
+];
+const AUTHORS = ['모과','생강','함께'];
+
+const catOf = k => CATS.find(c=>c.key===k) || CATS[0];
+const statOf = k => STATS.find(s=>s.key===k) || STATS[0];
+
+const nowISO = () => new Date().toISOString();
+const uid = () => (crypto.randomUUID ? crypto.randomUUID()
+  : 'id-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10));
+
+const esc = s => String(s??'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+/* ---------- state ---------- */
+let items = [];
+let settings = { url:'', key:'' };
+let filter = { status:'', cat:'', q:'' };
+let editingId = null;
+let detailId = null;
+let client = null;
+let channel = null;
+let syncState = 'off';   // off | on | err
+
+/* ---------- storage ---------- */
+function loadLocal(){
+  try{
+    const raw = localStorage.getItem(LS_ITEMS);
+    items = raw ? JSON.parse(raw) : [];
+    if(!Array.isArray(items)) items = [];
+  }catch(e){ items = []; }
+  try{
+    const s = localStorage.getItem(LS_SET);
+    if(s) settings = Object.assign({url:'',key:''}, JSON.parse(s));
+  }catch(e){}
+}
+function persist(){
+  try{ localStorage.setItem(LS_ITEMS, JSON.stringify(items)); }catch(e){ toast('저장 공간이 부족해요 😢'); }
+}
+function saveSettings(){
+  try{ localStorage.setItem(LS_SET, JSON.stringify(settings)); }catch(e){}
+}
+
+/* ---------- seed ---------- */
+function seed(){
+  if(items.length) return;
+  const t = '2026-11-22T09:00:00+09:00';
+  items = [
+    {
+      id: uid(), title:'EP.01 웨딩홀 투어 첫날, 신부는 감동 신랑은 계산기', author:'함께',
+      category:'wedding', status:'conti',
+      cuts:[
+        '웨딩홀 로비. 모과가 눈 반짝이며 "여기 진짜 예뻐…!" / 생강은 팜플렛 뒤에서 조용히 "보증인원 300명이면 1인당 얼마지…"',
+        '안내 직원 "주말은 3개월 전에 마감이에요~" / 모과 표정이 굳고, 생강은 말없이 달력에 동그라미를 친다.',
+        '상담실. 모과는 드레스 사진 보며 감동의 눈물, 생강은 계산기 두드리다 눈이 마주치자 "…예쁘다." / 모과 "지금 계산했지?"',
+        '웨딩홀 앞, 두 사람. 모과 "우리 결혼식 진짜 하자!" / 생강 "응. 대신 신혼여행은 내가 정한다." 내레이션 "결혼 준비는 사랑과 산수의 합작."'
+      ],
+      memo:'실제 웨딩홀 투어에서 있었던 일. 3컷 생강의 "예쁘다"가 포인트, 표정은 최대한 무표정으로.',
+      tags:'#결혼준비 #웨딩홀 #모과생강',
+      created_at:'2026-11-20T21:10:00+09:00', updated_at:t
+    },
+    {
+      id: uid(), title:'EP.02 낚시 초보 생강, 의자만 지키다 물고기를 잡다', author:'생강',
+      category:'trip', status:'idea',
+      cuts:[
+        '새벽 낚시터. 모과가 낚싯대를 흔들며 "오늘은 진짜 잡는다!" / 생강은 캠핑 의자에 앉아 커피만 홀짝.',
+        '모과가 엉킨 낚싯줄과 씨름 중. 옆에서 생강이 조용히 "그거… 반대로 감으면 돼."',
+        '생강이 낚싯대를 받아 한 번 던진다. 5초 뒤 입질. 모과 "(나는 세 시간 했는데…)"',
+        '생강이 물고기를 들어 살짝 미소. 모과는 사진 찍느라 난리. 내레이션 "실력은 조용히 온다."'
+      ],
+      memo:'캠핑·낚시 편으로 쓰기. 마지막 컷에 노을 배경 넣으면 좋을 듯.',
+      tags:'#캠핑 #낚시 #주말여행',
+      created_at:'2026-11-21T22:40:00+09:00', updated_at:'2026-11-21T23:05:00+09:00'
+    }
+  ];
+  persist();
+}
+
+/* ---------- helpers ---------- */
+function fmtDate(iso){
+  const d = new Date(iso);
+  if(isNaN(d)) return '';
+  const now = new Date();
+  const sameYear = d.getFullYear() === now.getFullYear();
+  const md = `${d.getMonth()+1}.${String(d.getDate()).padStart(2,'0')}`;
+  return sameYear ? md : `${String(d.getFullYear()).slice(2)}.${md}`;
+}
+function fmtFull(iso){
+  const d = new Date(iso);
+  if(isNaN(d)) return '';
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+function avatarHTML(author){
+  const g = '<img src="assets/avatar_mogwa.png" alt="">';
+  const b = '<img src="assets/avatar_saenggang.png" alt="">';
+  if(author === '모과') return `<span class="who">${g}모과</span>`;
+  if(author === '생강') return `<span class="who">${b}생강</span>`;
+  return `<span class="who"><span class="duo">${g}${b}</span>함께</span>`;
+}
+function filledCuts(it){ return (it.cuts||[]).filter(c => (c||'').trim()).length; }
+function normTags(str){
+  return String(str||'').trim().split(/[\s,]+/).filter(Boolean)
+    .map(t => t.startsWith('#') ? t : '#'+t).join(' ');
+}
+function searchBlob(it){
+  return [it.title, it.memo, it.tags, ...(it.cuts||[])].join(' ').toLowerCase();
+}
+
+/* ---------- render ---------- */
+function matches(it){
+  if(filter.status && it.status !== filter.status) return false;
+  if(filter.cat && it.category !== filter.cat) return false;
+  if(filter.q && !searchBlob(it).includes(filter.q.toLowerCase())) return false;
+  return true;
+}
+function ts(v){ const t = Date.parse(v); return isNaN(t) ? 0 : t; }
+function sorted(){
+  return [...items].sort((a,b) => ts(b.updated_at) - ts(a.updated_at));
+}
+
+function renderStats(){
+  const base = filter.q || filter.cat ? items.filter(it => (!filter.cat || it.category===filter.cat) && (!filter.q || searchBlob(it).includes(filter.q.toLowerCase()))) : items;
+  document.getElementById('totalLabel').textContent = `전체 ${items.length}편`;
+  document.getElementById('stats').innerHTML = STATS.map(s=>{
+    const n = base.filter(i=>i.status===s.key).length;
+    return `<button class="stat ${filter.status===s.key?'active':''}" data-status="${s.key}" aria-pressed="${filter.status===s.key}">
+      <span class="em">${s.emoji}</span><span class="n">${n}</span><span class="lb">${s.label}</span></button>`;
+  }).join('');
+}
+
+function renderCatChips(){
+  const all = `<button class="chip ${!filter.cat?'active':''}" data-cat="">🍃 전체</button>`;
+  document.getElementById('catChips').innerHTML = all + CATS.map(c=>
+    `<button class="chip ${filter.cat===c.key?'active':''}" data-cat="${c.key}">${c.emoji} ${c.label}</button>`
+  ).join('');
+}
+
+function renderList(){
+  const list = document.getElementById('list');
+  const rows = sorted().filter(matches);
+  const cnt = document.getElementById('listCount');
+  const empty = document.getElementById('empty');
+  const title = document.getElementById('listTitle');
+
+  cnt.textContent = rows.length ? `${rows.length}편` : '';
+  const hasFilter = filter.status || filter.cat || filter.q;
+  title.textContent = hasFilter ? '골라낸 콘티' : '콘티 목록';
+
+  if(!rows.length){
+    list.innerHTML = '';
+    empty.hidden = false;
+    empty.querySelector('b').textContent = hasFilter ? '조건에 맞는 콘티가 없어요' : '아직 콘티가 없어요';
+    empty.querySelector('p').innerHTML = hasFilter ? '필터를 풀거나 다른 단어로 찾아볼까요?' : '머릿속에 떠오른 썰, 지금 적어두면<br>다음에 그릴 때 바로 꺼낼 수 있어요.';
+    return;
+  }
+  empty.hidden = true;
+  list.innerHTML = rows.map(it=>{
+    const s = statOf(it.status), c = catOf(it.category);
+    const idx = (it.cuts||[]).findIndex(t=>(t||'').trim());
+    const excerpt = idx >= 0 ? `<span class="n">${idx+1}컷</span>${esc(it.cuts[idx])}` : (it.memo ? esc(it.memo) : '아직 컷을 안 적었어요');
+    const n = filledCuts(it);
+    return `<article class="card" data-id="${it.id}" data-status="${it.status}" tabindex="0" role="button" aria-label="${esc(it.title)} 상세 보기">
+      <div class="card-top">
+        <span class="pill ${it.status}">${s.emoji} ${s.label}</span>
+        <span class="cat-tag">${c.emoji} ${c.label}</span>
+      </div>
+      <h3 class="card-title">${esc(it.title || '(제목 없음)')}</h3>
+      <p class="card-excerpt">${excerpt}</p>
+      <div class="card-foot">
+        ${avatarHTML(it.author)}
+        <span class="dot-sep"></span>
+        <span>${fmtDate(it.updated_at)}</span>
+        <span class="right">${n?`<span class="cutcount">${n}컷</span>`:''}</span>
+      </div>
+    </article>`;
+  }).join('');
+}
+function renderAll(){ renderStats(); renderCatChips(); renderList(); renderSyncDot(); }
+
+function renderSyncDot(){
+  const dot = document.getElementById('syncDot');
+  if(syncState === 'off'){ dot.hidden = true; return; }
+  dot.hidden = false;
+  dot.className = 'sync-dot ' + (syncState==='on' ? 'on' : syncState==='err' ? 'err' : '');
+}
+
+/* ---------- toast ---------- */
+let toastTimer;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2100);
+}
+
+/* ---------- sheets ---------- */
+function openSheet(sheetId, bdId){
+  document.getElementById(bdId).classList.add('open');
+  document.getElementById(sheetId).classList.add('open');
+  document.body.classList.add('sheet-open');
+}
+function closeSheet(sheetId, bdId){
+  document.getElementById(bdId).classList.remove('open');
+  document.getElementById(sheetId).classList.remove('open');
+  if(!document.querySelector('.sheet.open')) document.body.classList.remove('sheet-open');
+}
+function closeAll(){
+  closeSheet('shEditor','bdEditor');
+  closeSheet('shDetail','bdDetail');
+  closeSheet('shSet','bdSet');
+}
+
+/* ---------- editor ---------- */
+const F = {
+  title: () => document.getElementById('fTitle'),
+  memo: () => document.getElementById('fMemo'),
+  tags: () => document.getElementById('fTags')
+};
+let form = { author:'모과', category:'wedding', status:'idea', cuts:['','','',''] };
+
+function buildCutFields(){
+  document.getElementById('fCuts').innerHTML = [0,1,2,3].map(i=>`
+    <div class="cutrow">
+      <span class="cutno">${i+1}컷</span>
+      <textarea data-cut="${i}" rows="2" placeholder="${
+        ['첫 장면 · 상황과 첫 대사','이어지는 장면 · 표정/행동','반전이나 웃음 포인트','마무리 · 내레이션/여운'][i]
+      }"></textarea>
+    </div>`).join('');
+  document.querySelectorAll('#fCuts textarea').forEach(ta=>{
+    ta.addEventListener('input', ()=>{
+      form.cuts[Number(ta.dataset.cut)] = ta.value;
+      autosize(ta);
+    });
+    autosize(ta);
+  });
+}
+function autosize(ta){ ta.style.height='auto'; ta.style.height = Math.max(44, ta.scrollHeight)+'px'; }
+
+function buildOpts(){
+  document.getElementById('fCategory').innerHTML = CATS.map(c=>
+    `<button class="opt" data-cat="${c.key}">${c.emoji} ${c.label}</button>`).join('');
+  document.getElementById('fStatus').innerHTML = STATS.map(s=>
+    `<button class="opt" data-status="${s.key}">${s.emoji} ${s.label}</button>`).join('');
+  paintForm();
+}
+function paintForm(){
+  document.querySelectorAll('#fAuthor button').forEach(b=>b.classList.toggle('active', b.dataset.v===form.author));
+  document.querySelectorAll('#fCategory .opt').forEach(b=>b.classList.toggle('active', b.dataset.cat===form.category));
+  document.querySelectorAll('#fStatus .opt').forEach(b=>b.classList.toggle('active', b.dataset.status===form.status));
+}
+
+function openEditor(id){
+  editingId = id || null;
+  const it = id ? items.find(i=>i.id===id) : null;
+  form = it
+    ? { author:it.author, category:it.category, status:it.status, cuts:[0,1,2,3].map(i=>(it.cuts&&it.cuts[i])||'') }
+    : { author:'모과', category:'wedding', status:'idea', cuts:['','','',''] };
+  document.getElementById('edTitle').textContent = it ? '콘티 수정' : '새 글콘티';
+  document.getElementById('edDelete').hidden = !it;
+  F.title().value = it ? it.title : '';
+  F.memo().value = it ? (it.memo||'') : '';
+  F.tags().value = it ? (it.tags||'') : '';
+  buildCutFields();
+  document.querySelectorAll('#fCuts textarea').forEach(ta=>{
+    ta.value = form.cuts[Number(ta.dataset.cut)] || '';
+    autosize(ta);
+  });
+  paintForm();
+  openSheet('shEditor','bdEditor');
+  setTimeout(()=>{ if(!it) F.title().focus(); }, 260);
+}
+
+function saveEditor(){
+  const title = F.title().value.trim();
+  if(!title){ toast('제목을 먼저 적어주세요 ✏️'); F.title().focus(); return; }
+  const cuts = [...document.querySelectorAll('#fCuts textarea')].map(t=>t.value.trim());
+  const payload = {
+    title,
+    author: form.author,
+    category: form.category,
+    status: form.status,
+    cuts,
+    memo: F.memo().value.trim(),
+    tags: normTags(F.tags().value)
+  };
+  const t = nowISO();
+  let saved;
+  if(editingId){
+    const i = items.findIndex(x=>x.id===editingId);
+    if(i < 0) return;
+    saved = Object.assign({}, items[i], payload, { updated_at:t });
+    items[i] = saved;
+  }else{
+    saved = Object.assign({ id:uid(), created_at:t, updated_at:t, deleted:false }, payload);
+    items.unshift(saved);
+  }
+  persist();
+  pushOne(saved);
+  renderAll();
+  closeSheet('shEditor','bdEditor');
+  toast(editingId ? '콘티를 고쳤어요 ✏️' : '새 콘티를 저장했어요 🎉');
+}
+
+/* ---------- detail ---------- */
+function openDetail(id){
+  const it = items.find(i=>i.id===id);
+  if(!it) return;
+  detailId = id;
+  const s = statOf(it.status), c = catOf(it.category);
+  const cuts = (it.cuts||[]).map((t,i)=>({t:t.trim(), i})).filter(x=>x.t);
+  document.getElementById('dBody').innerHTML = `
+    <div class="d-title">${esc(it.title || '(제목 없음)')}</div>
+    <div class="d-meta" style="padding:0 0 12px;border:0">
+      ${avatarHTML(it.author)}
+      <span class="dot-sep"></span>
+      <span>${c.emoji} ${c.label}</span>
+      <span class="dot-sep"></span>
+      <span>${fmtFull(it.updated_at)}</span>
+      <span class="grow"></span>
+      <span class="pill ${it.status}">${s.emoji} ${s.label}</span>
+    </div>
+    ${cuts.length ? cuts.map(x=>`<div class="d-cut"><span class="cutno">${x.i+1}컷</span><p>${esc(x.t)}</p></div>`).join('')
+      : '<div class="d-cut"><p style="color:#B3A492">아직 컷을 안 적었어요. 수정해서 채워볼까요?</p></div>'}
+    ${it.memo ? `<div class="d-memo"><span class="lb">📌 자유 메모</span>${esc(it.memo)}</div>` : ''}
+    ${it.tags ? `<div class="d-tags">${esc(it.tags)}</div>` : ''}
+    <div class="d-status">
+      <span class="lb">상태 바로 바꾸기</span>
+      <div class="opts" id="dStatusOpts">
+        ${STATS.map(x=>`<button class="opt ${x.key===it.status?'active':''}" data-status="${x.key}">${x.emoji} ${x.label}</button>`).join('')}
+      </div>
+    </div>
+    <div class="d-actions">
+      <button class="btn btn-ghost btn-sm" id="dDelete" style="height:40px">🗑 삭제</button>
+    </div>
+    <p class="d-hint">카드를 길게 눌러도 상태를 바꿀 수 있어요</p>`;
+  openSheet('shDetail','bdDetail');
+}
+
+function buildCopyText(it){
+  const c = catOf(it.category);
+  const who = it.author === '함께' ? '모과 · 생강' : (it.author === '모과' ? '모과 (생강도 등장)' : '생강 (모과도 등장)');
+  const lines = ['📝 모생일기 인스타툰 제작 요청', ''];
+  lines.push(`제목: ${it.title || '(제목 없음)'}`);
+  lines.push(`카테고리: ${c.emoji} ${c.label}`);
+  lines.push(`등장인물: ${who}`);
+  lines.push('');
+  const cuts = (it.cuts||[]).map((t,i)=>({t:(t||'').trim(), i})).filter(x=>x.t);
+  if(cuts.length) cuts.forEach(x=>lines.push(`${x.i+1}컷: ${x.t}`));
+  else lines.push('1컷: (아직 비어 있음)');
+  if(it.memo) lines.push('', `메모: ${it.memo}`);
+  if(it.tags) lines.push(`태그: ${it.tags}`);
+  return lines.join('\n');
+}
+async function copyText(text){
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(text);
+    }else{
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;top:-1000px;left:0;opacity:0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    toast('시루에게 보낼 콘티를 복사했어요 📋 채팅에 붙여넣기!');
+  }catch(e){
+    toast('복사가 안 됐어요. 길게 눌러 직접 복사해 주세요.');
+  }
+}
+
+/* ---------- delete ---------- */
+function deleteItem(id){
+  const it = items.find(i=>i.id===id);
+  if(!it) return;
+  if(!it.deleted){ it.deleted = true; it.updated_at = nowISO(); }
+  items = items.filter(i=>i.id!==id);
+  persist();
+  if(syncState !== 'off') softDeleteRemote(it);
+  renderAll();
+  closeAll();
+  toast('콘티를 삭제했어요');
+}
+
+/* ---------- events ---------- */
+document.getElementById('btnNew').addEventListener('click', ()=>openEditor(null));
+document.getElementById('btnSettings').addEventListener('click', openSettings);
+document.getElementById('sClose').addEventListener('click', ()=>closeSheet('shSet','bdSet'));
+document.getElementById('sDone').addEventListener('click', ()=>closeSheet('shSet','bdSet'));
+document.getElementById('edClose').addEventListener('click', ()=>closeSheet('shEditor','bdEditor'));
+document.getElementById('edCancel').addEventListener('click', ()=>closeSheet('shEditor','bdEditor'));
+document.getElementById('edSave').addEventListener('click', saveEditor);
+document.getElementById('dClose').addEventListener('click', ()=>closeSheet('shDetail','bdDetail'));
+document.getElementById('dEdit').addEventListener('click', ()=>{
+  const id = detailId;
+  closeSheet('shDetail','bdDetail');
+  setTimeout(()=>openEditor(id), 80);
+});
+document.getElementById('dCopy').addEventListener('click', ()=>{
+  const it = items.find(i=>i.id===detailId);
+  if(it) copyText(buildCopyText(it));
+});
+
+document.querySelectorAll('.backdrop').forEach(bd=>{
+  bd.addEventListener('click', ()=>{
+    const which = bd.dataset.close;
+    if(which === 'editor') closeSheet('shEditor','bdEditor');
+    if(which === 'detail') closeSheet('shDetail','bdDetail');
+    if(which === 'set') closeSheet('shSet','bdSet');
+  });
+});
+document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape') closeAll();
+  if((e.metaKey||e.ctrlKey) && e.key === 'Enter'){
+    if(document.getElementById('shEditor').classList.contains('open')) saveEditor();
+  }
+});
+
+document.getElementById('fAuthor').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-v]');
+  if(!b) return;
+  form.author = b.dataset.v; paintForm();
+});
+document.getElementById('fCategory').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-cat]');
+  if(!b) return;
+  form.category = b.dataset.cat; paintForm();
+});
+document.getElementById('fStatus').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-status]');
+  if(!b) return;
+  form.status = b.dataset.status; paintForm();
+});
+
+// delete (armed twice)
+let armed = false, armTimer;
+document.getElementById('edDelete').addEventListener('click', e=>{
+  if(!editingId) return;
+  const b = e.currentTarget;
+  if(!armed){
+    armed = true; b.textContent = '한 번 더 누르면 삭제';
+    armTimer = setTimeout(()=>{ armed = false; b.textContent = '삭제'; }, 2600);
+    return;
+  }
+  clearTimeout(armTimer); armed = false; b.textContent = '삭제';
+  deleteItem(editingId);
+});
+
+// stats / cat / list delegation
+document.getElementById('stats').addEventListener('click', e=>{
+  const b = e.target.closest('.stat');
+  if(!b) return;
+  filter.status = filter.status === b.dataset.status ? '' : b.dataset.status;
+  renderAll();
+});
+document.getElementById('catChips').addEventListener('click', e=>{
+  const b = e.target.closest('.chip');
+  if(!b) return;
+  filter.cat = b.dataset.cat || '';
+  renderAll();
+});
+
+const q = document.getElementById('q');
+const searchBox = document.getElementById('searchBox');
+q.addEventListener('input', ()=>{
+  filter.q = q.value.trim();
+  searchBox.classList.toggle('has-text', !!q.value);
+  renderAll();
+});
+document.getElementById('qClear').addEventListener('click', ()=>{
+  q.value=''; filter.q=''; searchBox.classList.remove('has-text'); renderAll(); q.focus();
+});
+
+document.getElementById('list').addEventListener('click', e=>{
+  const card = e.target.closest('.card');
+  if(card) openDetail(card.dataset.id);
+});
+document.getElementById('list').addEventListener('keydown', e=>{
+  const card = e.target.closest('.card');
+  if(card && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); openDetail(card.dataset.id); }
+});
+
+document.getElementById('dBody').addEventListener('click', e=>{
+  const opt = e.target.closest('#dStatusOpts .opt');
+  if(opt){
+    const it = items.find(i=>i.id===detailId);
+    if(!it) return;
+    it.status = opt.dataset.status; it.updated_at = nowISO();
+    persist(); pushOne(it); renderAll();
+    document.querySelectorAll('#dStatusOpts .opt').forEach(b=>b.classList.toggle('active', b.dataset.status===it.status));
+    const pill = document.querySelector('#dBody .d-meta .pill');
+    if(pill){ pill.className = 'pill ' + it.status; pill.textContent = `${statOf(it.status).emoji} ${statOf(it.status).label}`; }
+    toast(`${statOf(it.status).emoji} ${statOf(it.status).label}로 바꿨어요`);
+    return;
+  }
+  const del = e.target.closest('#dDelete');
+  if(del){
+    if(!armed){
+      armed = true; del.textContent = '한 번 더 누르면 삭제';
+      armTimer = setTimeout(()=>{ armed=false; del.textContent='🗑 삭제'; }, 2600);
+    }else{
+      clearTimeout(armTimer); armed=false; deleteItem(detailId);
+    }
+  }
+});
+
+/* =========================================================
+   Supabase (optional realtime sync)
+   ========================================================= */
+function loadSDK(){
+  return new Promise((resolve, reject)=>{
+    if(window.supabase && window.supabase.createClient) return resolve(window.supabase);
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    s.onload = ()=> window.supabase ? resolve(window.supabase) : reject(new Error('SDK 로드 실패'));
+    s.onerror = ()=> reject(new Error('네트워크 · SDK 로드 실패'));
+    document.head.appendChild(s);
+  });
+}
+function rowToItem(r){
+  return {
+    id:r.id, title:r.title||'', author:r.author||'모과', category:r.category||'wedding',
+    status:r.status||'idea', cuts:Array.isArray(r.cuts) ? r.cuts : [],
+    memo:r.memo||'', tags:r.tags||'', created_at:r.created_at, updated_at:r.updated_at
+  };
+}
+function itemToRow(it){
+  return {
+    id:it.id, title:it.title, author:it.author, category:it.category, status:it.status,
+    cuts:it.cuts, memo:it.memo, tags:it.tags,
+    created_at:it.created_at, updated_at:it.updated_at, deleted:false
+  };
+}
+function mergeRemote(rows){
+  let changed = false;
+  rows.forEach(r=>{
+    const i = items.findIndex(x=>x.id===r.id);
+    if(r.deleted){
+      if(i >= 0){ items.splice(i,1); changed = true; }
+      return;
+    }
+    const it = rowToItem(r);
+    if(i < 0){ items.push(it); changed = true; }
+    else if(ts(it.updated_at) >= ts(items[i].updated_at)){ items[i] = it; changed = true; }
+  });
+  if(changed) persist();
+  renderAll();
+}
+async function pushOne(it){
+  if(!client || syncState === 'off') return;
+  try{
+    const { error } = await withTimeout(client.from(TABLE).upsert(itemToRow(it)), 8000);
+    if(error) throw error;
+    if(syncState === 'err'){ syncState = 'on'; renderSyncDot(); }
+  }catch(e){
+    syncState = 'err'; renderSyncDot();
+    toast('클라우드 저장 실패 · 이 폰에는 저장됐어요');
+  }
+}
+async function softDeleteRemote(it){
+  if(!client) return;
+  try{
+    await withTimeout(client.from(TABLE).upsert(Object.assign(itemToRow(it), {deleted:true})), 8000);
+  }catch(e){}
+}
+function withTimeout(promise, ms){
+  return Promise.race([
+    promise,
+    new Promise((_, reject)=>setTimeout(()=>reject(new Error('시간 초과 · 네트워크와 URL을 확인해 주세요')), ms || 8000))
+  ]);
+}
+async function connect(opts){
+  const url = (opts && opts.url || settings.url || '').trim().replace(/\/+$/,'');
+  const key = (opts && opts.key || settings.key || '').trim();
+  setStateText('연결하는 중…','warn');
+  if(!/^https?:\/\//.test(url) || !key){ setStateText('URL과 anon key를 모두 넣어주세요','err'); return false; }
+  try{
+    const sdk = await withTimeout(loadSDK(), 10000);
+    client = sdk.createClient(url, key, { auth:{ persistSession:false, autoRefreshToken:false } });
+    const { data, error } = await withTimeout(client.from(TABLE).select('*'), 8000);
+    if(error) throw error;
+    settings = { url, key }; saveSettings();
+    syncState = 'on'; renderSyncDot();
+    mergeRemote(data || []);
+    // push local-only items up
+    const remoteIds = new Set((data||[]).map(r=>r.id));
+    const pushList = items.filter(i=>!remoteIds.has(i.id));
+    for(const it of pushList){ await withTimeout(client.from(TABLE).upsert(itemToRow(it)), 8000); }
+    subscribe();
+    setStateText(`연결됨 · 콘티 ${(data||[]).length}편 동기화`,'ok');
+    toast('두 사람 폰이 연결됐어요 ☁️');
+    return true;
+  }catch(e){
+    client = null; syncState = 'off'; renderSyncDot();
+    const msg = /relation|does not exist|42P01/i.test(e.message||'')
+      ? '테이블이 없어요 · SQL Editor에서 supabase_schema.sql을 먼저 실행해 주세요'
+      : (/Invalid API key|JWT|401/i.test(e.message||'') ? 'anon key가 맞지 않아요' : (e.message || '연결 실패'));
+    setStateText(msg,'err');
+    return false;
+  }
+}
+function subscribe(){
+  if(channel && client) client.removeChannel(channel);
+  if(!client) return;
+  channel = client.channel('mosaeng-sync')
+    .on('postgres_changes', { event:'*', schema:'public', table:TABLE }, payload=>{
+      const r = payload.new || payload.old;
+      if(!r) return;
+      mergeRemote([r]);
+    })
+    .subscribe();
+}
+function disconnect(){
+  if(channel && client){ client.removeChannel(channel); channel = null; }
+  client = null; syncState = 'off'; renderSyncDot();
+  settings = { url:'', key:'' }; saveSettings();
+  setStateText('연결을 끊었어요 · 이 폰에만 저장 중','');
+}
+
+function setStateText(msg, kind){
+  const el = document.getElementById('sState');
+  el.className = 'set-state' + (kind ? ' '+kind : '');
+  el.textContent = msg;
+}
+
+function openSettings(){
+  document.getElementById('sUrl').value = settings.url || '';
+  document.getElementById('sKey').value = settings.key || '';
+  if(syncState === 'on'){
+    setStateText('연결됨 · 실시간 동기화 중','ok');
+  }else if(syncState === 'err'){
+    setStateText('연결에 문제가 있어요 · 다시 시도해 주세요','err');
+  }else{
+    setStateText('아직 연결하지 않았어요 · 이 폰에만 저장 중','');
+  }
+  openSheet('shSet','bdSet');
+}
+
+document.getElementById('sConnect').addEventListener('click', ()=>{
+  settings.url = document.getElementById('sUrl').value.trim();
+  settings.key = document.getElementById('sKey').value.trim();
+  connect();
+});
+document.getElementById('sDisconnect').addEventListener('click', disconnect);
+
+document.getElementById('sCopyCode').addEventListener('click', ()=>{
+  const u = document.getElementById('sUrl').value.trim(), k = document.getElementById('sKey').value.trim();
+  if(!u || !k){ toast('URL과 anon key를 먼저 입력해 주세요'); return; }
+  const code = 'MOSAENG1:' + btoa(unescape(encodeURIComponent(JSON.stringify({u,k}))));
+  copyText(code);
+});
+document.getElementById('sPasteCode').addEventListener('click', async ()=>{
+  let txt = '';
+  try{ txt = await navigator.clipboard.readText(); }catch(e){}
+  if(!txt){ txt = prompt('설정 코드를 붙여넣어 주세요') || ''; }
+  try{
+    const body = txt.trim().replace(/^MOSAENG1:/,'');
+    const { u, k } = JSON.parse(decodeURIComponent(escape(atob(body))));
+    if(!u || !k) throw new Error('bad');
+    document.getElementById('sUrl').value = u;
+    document.getElementById('sKey').value = k;
+    settings.url = u; settings.key = k;
+    connect();
+  }catch(e){ toast('설정 코드가 올바르지 않아요'); }
+});
+
+/* ---------- backup ---------- */
+document.getElementById('sExport').addEventListener('click', ()=>{
+  const data = { app:'mosaeng-conti', version:1, exported_at:nowISO(), items };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  const d = new Date();
+  a.href = URL.createObjectURL(blob);
+  a.download = `모생일기-콘티-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+  toast('콘티 파일을 내려받았어요 💾');
+});
+document.getElementById('sImportBtn').addEventListener('click', ()=>document.getElementById('sImportFile').click());
+document.getElementById('sImportFile').addEventListener('change', async e=>{
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  try{
+    const txt = await file.text();
+    const data = JSON.parse(txt);
+    const arr = Array.isArray(data) ? data : (data.items || []);
+    if(!Array.isArray(arr)) throw new Error('bad');
+    let added = 0, updated = 0;
+    arr.forEach(raw=>{
+      if(!raw || !raw.title) return;
+      const it = {
+        id: raw.id || uid(), title: raw.title, author: raw.author || '모과',
+        category: raw.category || 'wedding', status: raw.status || 'idea',
+        cuts: Array.isArray(raw.cuts) ? raw.cuts.slice(0,4) : ['','','',''],
+        memo: raw.memo || '', tags: raw.tags || '',
+        created_at: raw.created_at || nowISO(), updated_at: raw.updated_at || nowISO()
+      };
+      const i = items.findIndex(x=>x.id===it.id);
+      if(i >= 0){ items[i] = it; updated++; } else { items.push(it); added++; }
+    });
+    persist(); renderAll();
+    if(syncState === 'on'){ for(const it of items) await client.from(TABLE).upsert(itemToRow(it)); }
+    toast(`가져왔어요 · 새로 ${added}편, 갱신 ${updated}편`);
+  }catch(err){ toast('JSON 파일을 읽지 못했어요'); }
+  e.target.value = '';
+});
+
+/* ---------- boot ---------- */
+loadLocal();
+seed();
+buildOpts();
+renderAll();
+(function autoConnect(){
+  if(settings.url && settings.key){ connect(); }
+})();
+</script>
+</body>
+</html>
