@@ -8,6 +8,7 @@ create table if not exists public.mosaeng_contis (
   id          uuid primary key,
   title       text        not null default '',
   author      text        not null default '모과',      -- 모과 | 생강 | 함께
+  cast        text[]      not null default '{}',         -- 등장인물: 모과 | 생강 | 자두 | 대추 | 한라봉
   category    text        not null default 'wedding',   -- wedding | daily | trip | diet
   status      text        not null default 'idea',      -- idea | conti | making | done
   cuts        jsonb       not null default '["","","",""]'::jsonb,  -- 컷 배열 (4칸 기본, 9컷까지 늘어남)
@@ -17,6 +18,11 @@ create table if not exists public.mosaeng_contis (
   created_at  timestamptz not null default now(),
   updated_at  timestamptz not null default now()
 );
+
+-- 이미 만들어 둔 테이블(=cast 컬럼이 없는 예전 스키마)에도 안전하게 추가
+-- 이 줄을 실행하지 않으면 앱은 cast 없이 저장을 계속합니다(둘 다 정상 동작).
+alter table public.mosaeng_contis
+  add column if not exists cast text[] not null default '{}';
 
 -- 최근 수정순 조회용
 create index if not exists mosaeng_contis_updated_idx

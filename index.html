@@ -118,6 +118,94 @@ img{max-width:100%}
 .stat.active{background:var(--quince-soft);border-color:var(--quince-line);box-shadow:0 3px 12px rgba(244,201,93,.28)}
 .stat.active .n{color:var(--ginger-deep)}
 
+/* ---------- cast (등장인물 도감) ---------- */
+.cast{
+  margin-top:13px;background:var(--paper);border:1px solid var(--line);
+  border-radius:17px;padding:9px 5px 6px;box-shadow:var(--shadow);
+}
+.cast-head{display:flex;align-items:baseline;gap:5px;padding:0 9px 5px}
+.cast-head b{font-family:var(--hand);font-size:16.5px;font-weight:700;color:var(--ginger-deep);letter-spacing:-.7px}
+.cast-head .n{font-size:10.5px;color:var(--ink-soft);letter-spacing:-.2px}
+.cast-head .hint{margin-left:auto;font-size:9.5px;color:#B3A492;letter-spacing:-.2px;align-self:center}
+.cast-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px}
+.cast-item{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:5px 1px 4px;border-radius:13px;border:1px solid transparent;
+  transition:background .15s ease, border-color .15s ease, transform .14s ease;
+}
+.cast-item:active{transform:scale(.955)}
+.cast-item img{
+  width:40px;height:40px;border-radius:50%;object-fit:cover;
+  background:#F6EFE4;border:2px solid #FFF;box-shadow:0 2px 7px rgba(181,132,90,.16);
+}
+.cast-item .nm{font-size:11px;font-weight:700;color:var(--ink);letter-spacing:-.4px;line-height:1.25}
+.cast-item .tg{
+  font-size:8.5px;color:var(--ink-soft);letter-spacing:-.3px;line-height:1.2;
+  text-align:center;word-break:keep-all;padding:0 1px;
+}
+.cast-item.on{background:var(--quince-soft);border-color:var(--quince-line)}
+.cast-item.on img{border-color:var(--ginger);box-shadow:0 0 0 2px rgba(244,201,93,.4)}
+.cast-item.on .nm{color:var(--ginger-deep)}
+.cast-item.on .tg{color:#9A7B4E}
+
+/* 목록 카드 · 상세의 등장인물 표시 */
+.cast-mini{display:inline-flex;align-items:center}
+.cast-mini img{
+  width:17px;height:17px;border-radius:50%;object-fit:cover;
+  background:#F4EDE2;border:1px solid #FFF;box-sizing:content-box;
+}
+.cast-mini img+img{margin-left:-6px}
+.cast-mini+.cutcount{margin-left:3px}
+.cast-clear{
+  margin-left:auto;margin-right:7px;flex:0 0 auto;
+  background:var(--quince-soft);border:1px solid var(--quince-line);border-radius:999px;
+  padding:3px 9px;font-size:10.5px;font-weight:700;color:var(--ginger-deep);letter-spacing:-.2px;
+}
+.cast-clear:active{transform:scale(.95)}
+.listhead .cnt:last-child{margin-left:0}
+.listhead:has(.cast-clear:not([hidden])) .cnt{margin-left:0}
+.d-cast{display:flex;flex-wrap:wrap;gap:5px;padding:0 0 12px}
+.d-cast .cc{
+  display:inline-flex;align-items:center;gap:4px;background:#FBF3E5;border-radius:999px;
+  padding:2px 9px 2px 2px;font-size:11.5px;font-weight:700;color:var(--ginger-deep);
+  letter-spacing:-.3px;transition:transform .14s ease, background .14s ease;
+}
+.d-cast .cc:active{transform:scale(.96);background:var(--quince-soft)}
+.d-cast .cc img{width:20px;height:20px;border-radius:50%;object-fit:cover;background:#F4EDE2}
+
+/* 인물 카드 (프로필 모달) */
+.pc-head{display:flex;align-items:center;gap:14px;padding:2px 0 13px}
+.pc-av{
+  width:90px;height:90px;border-radius:50%;object-fit:cover;flex:0 0 auto;
+  background:#F6EFE4;border:3px solid #FFF;box-shadow:0 8px 20px rgba(181,132,90,.22);
+}
+.pc-id{min-width:0}
+.pc-universe{font-size:9.5px;color:#B3A492;letter-spacing:.6px;margin:0 0 3px}
+.pc-name{
+  display:flex;align-items:center;gap:7px;margin:0;
+  font-family:var(--hand);font-size:27px;font-weight:700;color:var(--ginger-deep);
+  letter-spacing:-1px;line-height:1.1;
+}
+.pc-name .mb{font-family:var(--body);font-size:10.5px;font-weight:700;color:#FFF8EE;background:var(--ginger);border-radius:999px;padding:2px 8px;letter-spacing:0}
+.pc-rel{font-size:12px;color:var(--ink-soft);margin:5px 0 0;letter-spacing:-.2px;line-height:1.45}
+.pc-line{
+  margin:0 0 13px;background:#FDF6E8;border:1px dashed var(--quince-line);border-radius:14px;
+  padding:11px 13px;font-size:13px;line-height:1.65;color:#6B5A48;letter-spacing:-.2px;
+}
+.pc-line .q{color:var(--ginger);font-family:var(--hand);font-size:15px;margin-right:2px}
+.pc-eps .lb{font-size:11.5px;color:var(--ink-soft);display:block;margin-bottom:6px;letter-spacing:-.2px}
+.pc-eps .lb b{color:var(--ginger-deep)}
+.pc-ep{
+  display:flex;align-items:center;gap:8px;width:100%;text-align:left;
+  background:#FFFCF6;border:1px solid var(--line);border-radius:12px;
+  padding:8px 10px;margin-bottom:6px;font-size:12px;color:var(--ink);letter-spacing:-.2px;
+}
+.pc-ep:active{background:var(--quince-soft)}
+.pc-ep .em{font-size:12px;flex:0 0 auto}
+.pc-ep .tx{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-ep .go{color:#B3A492;font-size:11px;flex:0 0 auto}
+.pc-none{font-size:11.5px;color:#B3A492;line-height:1.6;margin:0 0 6px}
+
 /* ---------- search + chips ---------- */
 .searchbar{padding:14px 0 0}
 .searchbox{
@@ -308,6 +396,17 @@ img{max-width:100%}
 .opt.active{background:var(--ginger);border-color:var(--ginger);color:#FFF8EE;font-weight:700}
 .opt:active{transform:scale(.97)}
 
+.castpick{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.castpick button{
+  display:flex;align-items:center;justify-content:center;gap:5px;height:40px;
+  border-radius:12px;background:#FFFCF6;border:1px solid var(--line);
+  font-size:12.5px;color:var(--ink-soft);letter-spacing:-.3px;padding:0 3px;
+  transition:all .15s ease;
+}
+.castpick button img{width:22px;height:22px;border-radius:50%;object-fit:cover;background:#F4EDE2}
+.castpick button.on{background:var(--quince-soft);border-color:var(--quince-line);color:var(--ginger-deep);font-weight:700}
+.castpick button:active{transform:scale(.97)}
+
 .cuts{display:grid;gap:8px}
 .cutrow{
   display:flex;gap:9px;align-items:flex-start;
@@ -461,6 +560,14 @@ code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-fa
     <div class="stats" id="stats"></div>
   </section>
 
+  <section class="cast" aria-label="등장인물 도감">
+    <div class="cast-head">
+      <b>등장인물</b><span class="n" id="castCount"></span>
+      <span class="hint">눌러서 인물 카드 보기</span>
+    </div>
+    <div class="cast-grid" id="castGrid"></div>
+  </section>
+
   <div class="searchbar">
     <div class="searchbox" id="searchBox">
       <span>🔍</span>
@@ -473,6 +580,7 @@ code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-fa
 
   <div class="listhead">
     <b id="listTitle">콘티 목록</b>
+    <button class="cast-clear" id="castClear" hidden>✕ 전체 보기</button>
     <span class="cnt" id="listCount"></span>
   </div>
   <div class="list" id="list"></div>
@@ -508,6 +616,11 @@ code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-fa
         <button data-v="생강"><img src="assets/avatar_saenggang.png" alt="">생강</button>
         <button data-v="함께"><span class="pair"><img src="assets/avatar_mogwa.png" alt=""><img src="assets/avatar_saenggang.png" alt=""></span>함께</button>
       </div>
+    </div>
+
+    <div class="field">
+      <div class="flabel"><b>등장인물</b><span class="hint" id="fCastHint">여러 명 고르기</span></div>
+      <div class="castpick" id="fCast"></div>
     </div>
 
     <div class="field">
@@ -615,6 +728,22 @@ code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-fa
   </div>
 </section>
 
+<!-- ============ 인물 카드 ============ -->
+<div class="backdrop" id="bdCast" data-close="cast"></div>
+<section class="sheet" id="shCast" role="dialog" aria-modal="true" aria-labelledby="pcHead">
+  <div class="sheet-head">
+    <div class="grab"></div>
+    <div class="sheet-title-row">
+      <h2 id="pcHead">인물 카드</h2>
+      <button class="sheet-close" id="pcClose" aria-label="닫기">✕</button>
+    </div>
+  </div>
+  <div class="sheet-body" id="pcBody"></div>
+  <div class="sheet-foot">
+    <button class="btn btn-primary" id="pcFilter">이 인물 콘티 모아보기</button>
+  </div>
+</section>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -640,6 +769,36 @@ const STATS = [
 ];
 const AUTHORS = ['모과','생강','함께'];
 
+/* ---------- 등장인물 도감 (모생 유니버스) ---------- */
+const CHARACTERS = [
+  { name:'모과', mbti:'E', role:'나 · E', tag:'E 하이텐션',
+    rel:'모생일기 주인공 · 생강의 아내',
+    line:'하이텐션 E, 먹방과 캠핑 진심', img:'assets/avatar_mogwa.png' },
+  { name:'생강', mbti:'I', role:'남편 · I', tag:'I 무덤덤',
+    rel:'모과의 남편',
+    line:'무덤덤 I, 조용한 팩트폭격기', img:'assets/avatar_saenggang.png' },
+  { name:'자두', mbti:'E', role:'절친 · E', tag:'절친 E',
+    rel:'모과의 절친 · 대추의 아내 · 한라봉 엄마',
+    line:'모과와 만나면 텐션 2배 폭발하는 E 절친', img:'assets/avatar_jadu.png' },
+  { name:'대추', mbti:'I', role:'절친남편 · 선비 I', tag:'선비 I',
+    rel:'자두의 남편 · 한라봉 아빠',
+    line:'조용하고 묵직한 선비형 I 남편', img:'assets/avatar_daechu.png' },
+  { name:'한라봉', mbti:'씩씩', role:'예비초1 · 씩씩', tag:'예비초1',
+    rel:'자두·대추의 딸 · 예비 초1',
+    line:'자두 엄마한테 맨날 장난당하지만 밝고 씩씩하게 자라는 예비 초1', img:'assets/avatar_hallabong.png' }
+];
+const charOf = name => CHARACTERS.find(c=>c.name===name);
+const CAST_NAMES = CHARACTERS.map(c=>c.name);
+/* 저장된 cast가 없으면 기존 author 기준으로 등장인물을 추정 (이전 데이터 호환) */
+function castOf(it){
+  if(!it) return [];
+  const explicit = Array.isArray(it.cast) ? it.cast.filter(n=>charOf(n)) : [];
+  if(explicit.length) return CAST_NAMES.filter(n=>explicit.indexOf(n) >= 0);
+  if(it.author === '함께') return ['모과','생강'];
+  if(charOf(it.author)) return [it.author];
+  return [];
+}
+
 const catOf = k => CATS.find(c=>c.key===k) || CATS[0];
 const statOf = k => STATS.find(s=>s.key===k) || STATS[0];
 
@@ -652,7 +811,7 @@ const esc = s => String(s??'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;'
 /* ---------- state ---------- */
 let items = [];
 let settings = { url:'', key:'' };
-let filter = { status:'', cat:'', q:'' };
+let filter = { status:'', cat:'', q:'', cast:'' };
 let editingId = null;
 let detailId = null;
 let client = null;
@@ -804,6 +963,7 @@ function searchBlob(it){
 function matches(it){
   if(filter.status && it.status !== filter.status) return false;
   if(filter.cat && it.category !== filter.cat) return false;
+  if(filter.cast && castOf(it).indexOf(filter.cast) < 0) return false;
   if(filter.q && !searchBlob(it).includes(filter.q.toLowerCase())) return false;
   return true;
 }
@@ -813,13 +973,26 @@ function sorted(){
 }
 
 function renderStats(){
-  const base = filter.q || filter.cat ? items.filter(it => (!filter.cat || it.category===filter.cat) && (!filter.q || searchBlob(it).includes(filter.q.toLowerCase()))) : items;
+  const base = items.filter(it => (!filter.cat || it.category===filter.cat)
+    && (!filter.q || searchBlob(it).includes(filter.q.toLowerCase()))
+    && (!filter.cast || castOf(it).indexOf(filter.cast) >= 0));
   document.getElementById('totalLabel').textContent = `전체 ${items.length}편`;
   document.getElementById('stats').innerHTML = STATS.map(s=>{
     const n = base.filter(i=>i.status===s.key).length;
     return `<button class="stat ${filter.status===s.key?'active':''}" data-status="${s.key}" aria-pressed="${filter.status===s.key}">
       <span class="em">${s.emoji}</span><span class="n">${n}</span><span class="lb">${s.label}</span></button>`;
   }).join('');
+}
+
+function renderCast(){
+  document.getElementById('castCount').textContent = `${CHARACTERS.length}명`;
+  document.getElementById('castGrid').innerHTML = CHARACTERS.map(c=>`
+    <button type="button" class="cast-item ${filter.cast===c.name?'on':''}" data-char="${c.name}"
+      aria-label="${c.name} 인물 카드 · ${c.role}" aria-pressed="${filter.cast===c.name}">
+      <img src="${c.img}" alt="${c.name}">
+      <span class="nm">${c.name}</span>
+      <span class="tg">${c.tag}</span>
+    </button>`).join('');
 }
 
 function renderCatChips(){
@@ -837,14 +1010,21 @@ function renderList(){
   const title = document.getElementById('listTitle');
 
   cnt.textContent = rows.length ? `${rows.length}편` : '';
-  const hasFilter = filter.status || filter.cat || filter.q;
-  title.textContent = hasFilter ? '골라낸 콘티' : '콘티 목록';
+  const clearBtn = document.getElementById('castClear');
+  if(clearBtn) clearBtn.hidden = !filter.cast;
+  const hasFilter = filter.status || filter.cat || filter.q || filter.cast;
+  title.textContent = filter.cast ? `${filter.cast} 나오는 콘티` : (hasFilter ? '골라낸 콘티' : '콘티 목록');
 
   if(!rows.length){
     list.innerHTML = '';
     empty.hidden = false;
-    empty.querySelector('b').textContent = hasFilter ? '조건에 맞는 콘티가 없어요' : '아직 콘티가 없어요';
-    empty.querySelector('p').innerHTML = hasFilter ? '필터를 풀거나 다른 단어로 찾아볼까요?' : '머릿속에 떠오른 썰, 지금 적어두면<br>다음에 그릴 때 바로 꺼낼 수 있어요.';
+    if(filter.cast){
+      empty.querySelector('b').textContent = `${filter.cast} 나오는 편이 아직 없어요`;
+      empty.querySelector('p').innerHTML = `새 글콘티에서 등장인물에 <b>${filter.cast}</b>를 넣어두면 여기 모여요.`;
+    }else{
+      empty.querySelector('b').textContent = hasFilter ? '조건에 맞는 콘티가 없어요' : '아직 콘티가 없어요';
+      empty.querySelector('p').innerHTML = hasFilter ? '필터를 풀거나 다른 단어로 찾아볼까요?' : '머릿속에 떠오른 썰, 지금 적어두면<br>다음에 그릴 때 바로 꺼낼 수 있어요.';
+    }
     return;
   }
   empty.hidden = true;
@@ -854,6 +1034,7 @@ function renderList(){
     const excerpt = idx >= 0 ? `<span class="n">${idx+1}컷</span>${esc(it.cuts[idx])}` : (it.memo ? esc(it.memo) : '아직 컷을 안 적었어요');
     const n = filledCuts(it);
     const isDone = it.status === 'done';
+    const extra = castOf(it).filter(x => x !== '모과' && x !== '생강');
     return `<article class="card" data-id="${it.id}" data-status="${it.status}" tabindex="0" role="button" aria-label="${esc(it.title)} 상세 보기">
       <div class="card-top">
         <span class="pill ${it.status}">${s.emoji} ${s.label}</span>
@@ -866,12 +1047,12 @@ function renderList(){
         ${avatarHTML(it.author)}
         <span class="dot-sep"></span>
         <span>${fmtDate(it.updated_at)}</span>
-        <span class="right">${n?`<span class="cutcount">${n}컷</span>`:''}</span>
+        <span class="right">${extra.length?`<span class="cast-mini" aria-label="등장 ${extra.join('·')}">${extra.map(x=>`<img src="${charOf(x).img}" alt="${x}" title="${x}">`).join('')}</span>`:''}${n?`<span class="cutcount">${n}컷</span>`:''}</span>
       </div>
     </article>`;
   }).join('');
 }
-function renderAll(){ renderStats(); renderCatChips(); renderList(); renderSyncDot(); }
+function renderAll(){ renderStats(); renderCatChips(); renderCast(); renderList(); renderSyncDot(); }
 
 function renderSyncDot(){
   const dot = document.getElementById('syncDot');
@@ -905,6 +1086,7 @@ function closeAll(){
   closeSheet('shEditor','bdEditor');
   closeSheet('shDetail','bdDetail');
   closeSheet('shSet','bdSet');
+  closeSheet('shCast','bdCast');
 }
 
 /* ---------- editor ---------- */
@@ -913,7 +1095,14 @@ const F = {
   memo: () => document.getElementById('fMemo'),
   tags: () => document.getElementById('fTags')
 };
-let form = { author:'모과', category:'wedding', status:'idea', cuts:['','','',''] };
+let form = { author:'모과', category:'wedding', status:'idea', cuts:['','','',''], cast:[] };
+/* form.cast가 비어 있으면 작성자 기준으로 자동 */
+function effectiveCast(){
+  const explicit = (Array.isArray(form.cast) ? form.cast : []).filter(n=>charOf(n));
+  if(explicit.length) return CAST_NAMES.filter(n=>explicit.indexOf(n) >= 0);
+  if(form.author === '함께') return ['모과','생강'];
+  return charOf(form.author) ? [form.author] : [];
+}
 
 function buildCutFields(count){
   const n = Math.max(4, count || 4);
@@ -947,6 +1136,8 @@ document.getElementById('fCuts').addEventListener('click', e=>{
 function autosize(ta){ ta.style.height='auto'; ta.style.height = Math.max(44, ta.scrollHeight)+'px'; }
 
 function buildOpts(){
+  document.getElementById('fCast').innerHTML = CHARACTERS.map(c=>
+    `<button type="button" data-char="${c.name}" aria-pressed="false"><img src="${c.img}" alt="">${c.name}</button>`).join('');
   document.getElementById('fCategory').innerHTML = CATS.map(c=>
     `<button class="opt" data-cat="${c.key}">${c.emoji} ${c.label}</button>`).join('');
   document.getElementById('fStatus').innerHTML = STATS.map(s=>
@@ -955,6 +1146,14 @@ function buildOpts(){
 }
 function paintForm(){
   document.querySelectorAll('#fAuthor button').forEach(b=>b.classList.toggle('active', b.dataset.v===form.author));
+  const eff = effectiveCast();
+  document.querySelectorAll('#fCast button').forEach(b=>{
+    const on = eff.indexOf(b.dataset.char) >= 0;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  const ch = document.getElementById('fCastHint');
+  if(ch) ch.textContent = (Array.isArray(form.cast) && form.cast.length) ? '직접 고름 · 다시 누르면 해제' : '작성자 기준 자동';
   document.querySelectorAll('#fCategory .opt').forEach(b=>b.classList.toggle('active', b.dataset.cat===form.category));
   document.querySelectorAll('#fStatus .opt').forEach(b=>b.classList.toggle('active', b.dataset.status===form.status));
 }
@@ -963,8 +1162,9 @@ function openEditor(id){
   editingId = id || null;
   const it = id ? items.find(i=>i.id===id) : null;
   form = it
-    ? { author:it.author, category:it.category, status:it.status, cuts:((it.cuts && it.cuts.length) ? it.cuts.slice() : ['','','','']) }
-    : { author:'모과', category:'wedding', status:'idea', cuts:['','','',''] };
+    ? { author:it.author, category:it.category, status:it.status, cast:(Array.isArray(it.cast)? it.cast.slice() : []),
+        cuts:((it.cuts && it.cuts.length) ? it.cuts.slice() : ['','','','']) }
+    : { author:'모과', category:'wedding', status:'idea', cuts:['','','',''], cast:[] };
   document.getElementById('edTitle').textContent = it ? '콘티 수정' : '새 글콘티';
   document.getElementById('edDelete').hidden = !it;
   F.title().value = it ? it.title : '';
@@ -988,6 +1188,7 @@ function saveEditor(){
   const payload = {
     title,
     author: form.author,
+    cast: effectiveCast(),
     category: form.category,
     status: form.status,
     cuts,
@@ -1022,6 +1223,7 @@ function openDetail(id){
   const cuts = (it.cuts||[]).map((t,i)=>({t:t.trim(), i})).filter(x=>x.t);
   document.getElementById('dBody').innerHTML = `
     <div class="d-title">${esc(it.title || '(제목 없음)')}</div>
+    ${castOf(it).length ? `<div class="d-cast">${castOf(it).map(n=>`<button type="button" class="cc" data-cchar="${n}" aria-label="${n} 인물 카드"><img src="${charOf(n).img}" alt="">${n}</button>`).join('')}</div>` : ''}
     <div class="d-meta" style="padding:0 0 12px;border:0">
       ${avatarHTML(it.author)}
       <span class="dot-sep"></span>
@@ -1050,7 +1252,10 @@ function openDetail(id){
 
 function buildCopyText(it){
   const c = catOf(it.category);
-  const who = it.author === '함께' ? '모과 · 생강' : (it.author === '모과' ? '모과 (생강도 등장)' : '생강 (모과도 등장)');
+  const cast = castOf(it);
+  const who = cast.length
+    ? cast.map(n=>`${n}(${charOf(n).role.replace(' · ', ', ')})`).join(' · ')
+    : '모과 · 생강';
   const lines = ['📝 모생일기 인스타툰 제작 요청', ''];
   lines.push(`제목: ${it.title || '(제목 없음)'}`);
   lines.push(`카테고리: ${c.emoji} ${c.label}`);
@@ -1080,6 +1285,42 @@ async function copyText(text){
   }catch(e){
     toast('복사가 안 됐어요. 길게 눌러 직접 복사해 주세요.');
   }
+}
+
+/* ---------- 인물 카드 (모생 유니버스) ---------- */
+let profileName = null;
+function episodesOf(name){
+  return sorted().filter(it => castOf(it).indexOf(name) >= 0);
+}
+function openProfile(name){
+  const c = charOf(name);
+  if(!c) return;
+  profileName = name;
+  const eps = episodesOf(name);
+  document.getElementById('pcHead').textContent = '인물 카드';
+  document.getElementById('pcBody').innerHTML = `
+    <div class="pc-head">
+      <img class="pc-av" src="${c.img}" alt="${c.name}">
+      <div class="pc-id">
+        <p class="pc-universe">모생 유니버스 · CHARACTER</p>
+        <h3 class="pc-name">${c.name}<span class="mb">${c.mbti}</span></h3>
+        <p class="pc-rel">${c.rel}</p>
+      </div>
+    </div>
+    <p class="pc-line"><span class="q">“</span>${c.line}<span class="q">”</span></p>
+    <div class="pc-eps">
+      <span class="lb">${c.name} 나오는 콘티 <b>${eps.length}편</b></span>
+      ${eps.length
+        ? eps.slice(0,3).map(it=>`<button type="button" class="pc-ep" data-ep="${it.id}">
+            <span class="em">${statOf(it.status).emoji}</span>
+            <span class="tx">${esc(it.title || '(제목 없음)')}</span>
+            <span class="go">›</span></button>`).join('')
+          + (eps.length > 3 ? `<p class="pc-none">외 ${eps.length-3}편 더 있어요</p>` : '')
+        : `<p class="pc-none">아직 ${c.name}가 나오는 콘티가 없어요.<br>새 글콘티를 쓰면서 등장인물로 골라보세요.</p>`}
+    </div>`;
+  const fb = document.getElementById('pcFilter');
+  fb.textContent = `${c.name} 콘티 모아보기 (${eps.length}편)`;
+  openSheet('shCast','bdCast');
 }
 
 /* ---------- status ---------- */
@@ -1139,12 +1380,44 @@ document.getElementById('dCopy').addEventListener('click', ()=>{
   if(it) copyText(buildCopyText(it));
 });
 
+document.getElementById('castGrid').addEventListener('click', e=>{
+  const b = e.target.closest('.cast-item');
+  if(b) openProfile(b.dataset.char);
+});
+document.getElementById('pcClose').addEventListener('click', ()=>closeSheet('shCast','bdCast'));
+document.getElementById('pcFilter').addEventListener('click', ()=>{
+  if(!profileName) return;
+  filter = { status:'', cat:'', q:'', cast:profileName };
+  const qel = document.getElementById('q');
+  if(qel) qel.value = '';
+  document.getElementById('searchBox').classList.remove('has-text');
+  renderAll();
+  closeSheet('shCast','bdCast');
+  toast(`${profileName} 나오는 콘티만 모았어요`);
+  setTimeout(()=>{
+    const t = document.getElementById('listTitle');
+    if(t && t.scrollIntoView) t.scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 220);
+});
+document.getElementById('pcBody').addEventListener('click', e=>{
+  const ep = e.target.closest('[data-ep]');
+  if(!ep) return;
+  const id = ep.dataset.ep;
+  closeSheet('shCast','bdCast');
+  setTimeout(()=>openDetail(id), 130);
+});
+document.getElementById('castClear').addEventListener('click', ()=>{
+  filter.cast = '';
+  renderAll();
+});
+
 document.querySelectorAll('.backdrop').forEach(bd=>{
   bd.addEventListener('click', ()=>{
     const which = bd.dataset.close;
     if(which === 'editor') closeSheet('shEditor','bdEditor');
     if(which === 'detail') closeSheet('shDetail','bdDetail');
     if(which === 'set') closeSheet('shSet','bdSet');
+    if(which === 'cast') closeSheet('shCast','bdCast');
   });
 });
 document.addEventListener('keydown', e=>{
@@ -1158,6 +1431,15 @@ document.getElementById('fAuthor').addEventListener('click', e=>{
   const b = e.target.closest('button[data-v]');
   if(!b) return;
   form.author = b.dataset.v; paintForm();
+});
+document.getElementById('fCast').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-char]');
+  if(!b) return;
+  const cur = effectiveCast();
+  const name = b.dataset.char;
+  const next = cur.indexOf(name) >= 0 ? cur.filter(x=>x !== name) : cur.concat([name]);
+  form.cast = next.length ? CAST_NAMES.filter(n=>next.indexOf(n) >= 0) : [];
+  paintForm();
 });
 document.getElementById('fCategory').addEventListener('click', e=>{
   const b = e.target.closest('button[data-cat]');
@@ -1222,9 +1504,15 @@ document.getElementById('list').addEventListener('keydown', e=>{
 });
 
 document.getElementById('dBody').addEventListener('click', e=>{
+  const cc = e.target.closest('[data-cchar]');
+  if(cc){
+    const name = cc.dataset.cchar;
+    closeSheet('shDetail','bdDetail');
+    setTimeout(()=>openProfile(name), 130);
+    return;
+  }
   const opt = e.target.closest('#dStatusOpts .opt');
-  if(opt){
-    const it = items.find(i=>i.id===detailId);
+  if(opt){    const it = items.find(i=>i.id===detailId);
     if(!it) return;
     if(!setStatus(it, opt.dataset.status)) return;
     document.querySelectorAll('#dStatusOpts .opt').forEach(b=>b.classList.toggle('active', b.dataset.status===it.status));
@@ -1261,13 +1549,14 @@ function rowToItem(r){
   return {
     id:r.id, title:r.title||'', author:r.author||'모과', category:r.category||'wedding',
     status:r.status||'idea', cuts:Array.isArray(r.cuts) ? r.cuts : [],
+    cast:Array.isArray(r.cast) ? r.cast.filter(n=>charOf(n)) : [],
     memo:r.memo||'', tags:r.tags||'', created_at:r.created_at, updated_at:r.updated_at
   };
 }
 function itemToRow(it){
   return {
     id:it.id, title:it.title, author:it.author, category:it.category, status:it.status,
-    cuts:it.cuts, memo:it.memo, tags:it.tags,
+    cuts:it.cuts, cast:castOf(it), memo:it.memo, tags:it.tags,
     created_at:it.created_at, updated_at:it.updated_at, deleted:false
   };
 }
@@ -1286,10 +1575,23 @@ function mergeRemote(rows){
   if(changed) persist();
   renderAll();
 }
+let castColumnOk = true;
+async function pushRow(row){
+  let res = await withTimeout(client.from(TABLE).upsert(row), 8000);
+  /* 예전 스키마(cast 컬럼 없음)면 cast를 빼고 다시 시도 */
+  if(res && res.error && /cast/i.test(res.error.message || '')){
+    castColumnOk = false;
+    const r2 = Object.assign({}, row); delete r2.cast;
+    res = await withTimeout(client.from(TABLE).upsert(r2), 8000);
+  }
+  return res;
+}
 async function pushOne(it){
   if(!client || syncState === 'off') return;
   try{
-    const { error } = await withTimeout(client.from(TABLE).upsert(itemToRow(it)), 8000);
+    const row = itemToRow(it);
+    if(!castColumnOk) delete row.cast;
+    const { error } = await pushRow(row);
     if(error) throw error;
     if(syncState === 'err'){ syncState = 'on'; renderSyncDot(); }
   }catch(e){
@@ -1300,7 +1602,9 @@ async function pushOne(it){
 async function softDeleteRemote(it){
   if(!client) return;
   try{
-    await withTimeout(client.from(TABLE).upsert(Object.assign(itemToRow(it), {deleted:true})), 8000);
+    const row = Object.assign(itemToRow(it), {deleted:true});
+    if(!castColumnOk) delete row.cast;
+    await pushRow(row);
   }catch(e){}
 }
 function withTimeout(promise, ms){
@@ -1433,6 +1737,7 @@ document.getElementById('sImportFile').addEventListener('change', async e=>{
       const it = {
         id: raw.id || uid(), title: raw.title, author: raw.author || '모과',
         category: raw.category || 'wedding', status: raw.status || 'idea',
+        cast: Array.isArray(raw.cast) ? raw.cast.filter(n=>charOf(n)) : [],
         cuts: Array.isArray(raw.cuts) ? raw.cuts.slice(0,30) : ['','','',''],
         memo: raw.memo || '', tags: raw.tags || '',
         created_at: raw.created_at || nowISO(), updated_at: raw.updated_at || nowISO()
