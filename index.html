@@ -246,8 +246,9 @@ img{max-width:100%}
   max-height:92vh;display:flex;flex-direction:column;
   transform:translateY(102%);transition:transform .28s cubic-bezier(.22,1,.36,1);
   overflow:hidden;
+  pointer-events:none;
 }
-.sheet.open{transform:translateY(0)}
+.sheet.open{transform:translateY(0);pointer-events:auto}
 .sheet-head{
   flex:0 0 auto;padding:8px 16px 10px;border-bottom:1px solid var(--line-soft);
   position:relative;
@@ -606,7 +607,7 @@ code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-fa
 
     <div class="set-card">
       <h3>📖 이렇게 써요</h3>
-      <p class="desc" style="margin-bottom:4px">· 떠오를 때 <b>새 글콘티</b>로 컷을 후다닥 적기 (칸이 모자라면 <b>＋ 컷 추가</b>)<br>· 인스타에 울린 편은 목록 카드의 <b>✅ 완료</b> 한 번으로 발행완료 (다시 누르면 되돌리기)<br>· 상세 화면에서는 4단계(💡 → ✏️ → 🎨 → ✅) 중 아무거나 바로 선택<br>· <b>📋 시루에게 제작 요청 복사</b> → 채팅에 붙여넣으면 바로 인스타툰 제작<br>· 카드 왼쪽 색 띠가 진행 상태를 알려줘요</p>
+      <p class="desc" style="margin-bottom:4px">· 떠오를 때 <b>새 글콘티</b>로 컷을 후다닥 적기 (칸이 모자라면 <b>＋ 컷 추가</b>)<br>· 인스타에 올린 편은 목록 카드의 <b>✅ 완료</b> 한 번으로 발행완료 (다시 누르면 되돌리기)<br>· 상세 화면에서는 4단계(💡 → ✏️ → 🎨 → ✅) 중 아무거나 바로 선택<br>· <b>📋 시루에게 제작 요청 복사</b> → 채팅에 붙여넣으면 바로 인스타툰 제작<br>· 카드 왼쪽 색 띠가 진행 상태를 알려줘요</p>
     </div>
   </div>
   <div class="sheet-foot">
@@ -1099,7 +1100,7 @@ function toggleDone(id){
   if(it.status === 'done'){
     const back = (it.prev_status && it.prev_status !== 'done' && STATS.some(s=>s.key===it.prev_status)) ? it.prev_status : 'making';
     setStatus(it, back);
-    toast(`${statOf(back).emoji} ${statOf(back).label}로 되돌렸어요`);
+    toast(`${statOf(back).emoji} ${statOf(back).label} 단계로 되돌렸어요`);
   }else{
     setStatus(it, 'done');
     toast('✅ 발행완료로 체크했어요');
@@ -1229,7 +1230,7 @@ document.getElementById('dBody').addEventListener('click', e=>{
     document.querySelectorAll('#dStatusOpts .opt').forEach(b=>b.classList.toggle('active', b.dataset.status===it.status));
     const pill = document.querySelector('#dBody .d-meta .pill');
     if(pill){ pill.className = 'pill ' + it.status; pill.textContent = `${statOf(it.status).emoji} ${statOf(it.status).label}`; }
-    toast(`${statOf(it.status).emoji} ${statOf(it.status).label}로 바꿨어요`);
+    toast(`${statOf(it.status).emoji} ${statOf(it.status).label} 단계로 바꿨어요`);
     return;
   }
   const del = e.target.closest('#dDelete');
