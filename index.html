@@ -127,8 +127,9 @@ img{max-width:100%}
 .cast-head b{font-family:var(--hand);font-size:16.5px;font-weight:700;color:var(--ginger-deep);letter-spacing:-.7px}
 .cast-head .n{font-size:10.5px;color:var(--ink-soft);letter-spacing:-.2px}
 .cast-head .hint{margin-left:auto;font-size:9.5px;color:#B3A492;letter-spacing:-.2px;align-self:center}
-.cast-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px}
+.cast-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:1px}
 .cast-item{
+  flex:0 0 calc(20% - 1px);
   display:flex;flex-direction:column;align-items:center;gap:2px;
   padding:5px 1px 4px;border-radius:13px;border:1px solid transparent;
   transition:background .15s ease, border-color .15s ease, transform .14s ease;
@@ -156,6 +157,7 @@ img{max-width:100%}
 }
 .cast-mini img+img{margin-left:-6px}
 .cast-mini+.cutcount{margin-left:3px}
+.cast-more{font-size:9.5px;color:var(--ink-soft);margin-left:2px}
 .cast-clear{
   margin-left:auto;margin-right:7px;flex:0 0 auto;
   background:var(--quince-soft);border:1px solid var(--quince-line);border-radius:999px;
@@ -785,7 +787,19 @@ const CHARACTERS = [
     line:'조용하고 묵직한 선비형 I 남편', img:'assets/avatar_daechu.png' },
   { name:'한라봉', mbti:'씩씩', role:'예비초1 · 씩씩', tag:'예비초1',
     rel:'자두·대추의 딸 · 예비 초1',
-    line:'자두 엄마한테 맨날 장난당하지만 밝고 씩씩하게 자라는 예비 초1', img:'assets/avatar_hallabong.png' }
+    line:'자두 엄마한테 맨날 장난당하지만 밝고 씩씩하게 자라는 예비 초1', img:'assets/avatar_hallabong.png' },
+  { name:'멜론', mbti:'E', role:'여동생 · 하이텐션 E', tag:'하이텐션 E',
+    rel:'모과의 여동생 · 적포도의 아내 · 능금·청포도 엄마',
+    line:'모과 여동생, 시원시원한 하이텐션 E', img:'assets/avatar_melon.png' },
+  { name:'적포도', mbti:'I', role:'제부 · I', tag:'제부 I',
+    rel:'멜론의 남편 · 능금·청포도 아빠',
+    line:'조용하고 편안한 I 성향 제부, 청포도 아빠', img:'assets/avatar_jeokpodo.png' },
+  { name:'능금', mbti:'발랄', role:'첫째 · 초5', tag:'첫째 초5',
+    rel:'멜론·적포도의 딸 · 초5',
+    line:'다정하고 발랄한 첫째 초5', img:'assets/avatar_neunggeum.png' },
+  { name:'청포도', mbti:'개구쟁이', role:'둘째 · 초3', tag:'둘째 초3',
+    rel:'멜론·적포도의 아들 · 초3',
+    line:'개구쟁이 눈웃음 둘째 초3, 적포도 아들', img:'assets/avatar_cheongpodo.png' }
 ];
 const charOf = name => CHARACTERS.find(c=>c.name===name);
 const CAST_NAMES = CHARACTERS.map(c=>c.name);
@@ -1035,6 +1049,9 @@ function renderList(){
     const n = filledCuts(it);
     const isDone = it.status === 'done';
     const extra = castOf(it).filter(x => x !== '모과' && x !== '생강');
+    const extraHtml = extra.length
+      ? `<span class="cast-mini" aria-label="등장 ${extra.join('·')}">${extra.slice(0,4).map(x=>`<img src="${charOf(x).img}" alt="${x}" title="${x}">`).join('')}${extra.length>4?`<span class="cast-more">+${extra.length-4}</span>`:''}</span>`
+      : '';
     return `<article class="card" data-id="${it.id}" data-status="${it.status}" tabindex="0" role="button" aria-label="${esc(it.title)} 상세 보기">
       <div class="card-top">
         <span class="pill ${it.status}">${s.emoji} ${s.label}</span>
@@ -1047,7 +1064,7 @@ function renderList(){
         ${avatarHTML(it.author)}
         <span class="dot-sep"></span>
         <span>${fmtDate(it.updated_at)}</span>
-        <span class="right">${extra.length?`<span class="cast-mini" aria-label="등장 ${extra.join('·')}">${extra.map(x=>`<img src="${charOf(x).img}" alt="${x}" title="${x}">`).join('')}</span>`:''}${n?`<span class="cutcount">${n}컷</span>`:''}</span>
+        <span class="right">${extraHtml}${n?`<span class="cutcount">${n}컷</span>`:''}</span>
       </div>
     </article>`;
   }).join('');
