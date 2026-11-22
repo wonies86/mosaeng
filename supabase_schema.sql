@@ -10,7 +10,7 @@ create table if not exists public.mosaeng_contis (
   author      text        not null default '모과',      -- 모과 | 생강 | 함께
   category    text        not null default 'wedding',   -- wedding | daily | trip | diet
   status      text        not null default 'idea',      -- idea | conti | making | done
-  cuts        jsonb       not null default '["","","",""]'::jsonb,  -- 1~4컷 배열
+  cuts        jsonb       not null default '["","","",""]'::jsonb,  -- 컷 배열 (4칸 기본, 9컷까지 늘어남)
   memo        text        not null default '',
   tags        text        not null default '',
   deleted     boolean     not null default false,        -- 양쪽 폰 동기화용 소프트 삭제

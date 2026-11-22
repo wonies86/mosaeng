@@ -198,6 +198,18 @@ img{max-width:100%}
 .dot-sep{width:2px;height:2px;border-radius:50%;background:#CBBBA8}
 .card-foot .right{margin-left:auto;display:inline-flex;align-items:center;gap:8px}
 .cutcount{background:#FBF3E5;border-radius:6px;padding:1.5px 6px;font-size:10.5px;color:var(--ginger-deep)}
+/* 목록 카드 원클릭 완료 토글 */
+.card-top .done-toggle{margin-left:auto}
+.done-toggle{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;
+  height:25px;padding:0 9px;border-radius:9px;
+  background:#FFF6EE;border:1px solid #F1DFD0;color:#B4633A;
+  font-size:10.5px;font-weight:700;letter-spacing:-.2px;white-space:nowrap;
+  transition:transform .14s ease, background .14s ease, border-color .14s ease;
+}
+.done-toggle .ck{font-size:10px;line-height:1}
+.done-toggle:active{transform:scale(.93)}
+.done-toggle.is-done{background:#E4EFEA;border-color:#C7DED2;color:#4E7A63}
 
 .empty{
   text-align:center;padding:38px 16px 30px;color:var(--ink-soft);
@@ -312,6 +324,12 @@ img{max-width:100%}
   font-size:13.5px;line-height:1.55;min-height:44px;padding:3px 0 0;color:var(--ink);
 }
 .cutrow textarea::placeholder{color:#C3B5A5;font-size:12.5px}
+.add-cut{
+  width:100%;height:38px;border-radius:12px;border:1px dashed var(--quince-line);
+  background:#FFFCF6;color:var(--ginger-deep);font-size:12.5px;font-weight:700;letter-spacing:-.3px;
+  transition:background .14s ease;
+}
+.add-cut:active{background:var(--quince-soft)}
 
 .btn{
   height:46px;border-radius:14px;font-size:14.5px;font-weight:700;letter-spacing:-.2px;
@@ -502,7 +520,7 @@ code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-fa
     </div>
 
     <div class="field">
-      <div class="flabel"><b>1~4컷 글콘티</b><span class="hint">상황·대사·표정 자유롭게</span></div>
+      <div class="flabel"><b>컷별 글콘티</b><span class="hint">상황·대사·표정 자유롭게 · ＋로 컷 추가</span></div>
       <div class="cuts" id="fCuts"></div>
     </div>
 
@@ -588,7 +606,7 @@ code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-fa
 
     <div class="set-card">
       <h3>📖 이렇게 써요</h3>
-      <p class="desc" style="margin-bottom:4px">· 떠오를 때 <b>새 글콘티</b>로 1~4컷을 후다닥 적기<br>· 그린 뒤엔 상태를 <b>제작중 → 발행완료</b>로 원클릭 변경<br>· <b>📋 시루에게 제작 요청 복사</b> → 채팅에 붙여넣으면 바로 인스타툰 제작<br>· 카드 왼쪽 색 띠가 진행 상태를 알려줘요</p>
+      <p class="desc" style="margin-bottom:4px">· 떠오를 때 <b>새 글콘티</b>로 컷을 후다닥 적기 (칸이 모자라면 <b>＋ 컷 추가</b>)<br>· 인스타에 울린 편은 목록 카드의 <b>✅ 완료</b> 한 번으로 발행완료 (다시 누르면 되돌리기)<br>· 상세 화면에서는 4단계(💡 → ✏️ → 🎨 → ✅) 중 아무거나 바로 선택<br>· <b>📋 시루에게 제작 요청 복사</b> → 채팅에 붙여넣으면 바로 인스타툰 제작<br>· 카드 왼쪽 색 띠가 진행 상태를 알려줘요</p>
     </div>
   </div>
   <div class="sheet-foot">
@@ -694,6 +712,63 @@ function seed(){
   persist();
 }
 
+/* ---------- 새 에피소드 시드 (한 번만 합치기) ----------
+   이미 쓰던 사람의 콘티 맨 앞에 새 편을 한 번만 끼워 넣고,
+   그 뒤에 사용자가 지우면 다시 넣지 않는다. */
+const LS_SEEDS = 'mosaeng.appliedSeeds.v1';
+const SEEDS = [
+  {
+    key: 'ep-sopung-camp-2026-11-22',
+    item: {
+      id: '7f3c1d92-8a4b-4e21-9c6d-2b5f0a1e4c01',
+      title: '2박 3일 캠핑의 최후 (용인 소풍캠핑장)',
+      author: '함께', category: 'trip', status: 'making', prev_status: 'conti',
+      cuts: [
+        '표지 — 「2박 3일 캠핑의 최후 (feat. 들켜버린 아침)」. 텐트 앞 모과(신남) · 생강(차분) 투샷.',
+        '도착 — 캠핑장 텐트 앞. 모과 "공기 좋다!! 오늘 제대로 먹자!!" / 짐 든 생강 "...천천히."',
+        '첫날 밤 — 테이블 위 대방어 회. 모과 "올해 첫 방어 영접!! 행복하다!!" / 조용히 젓가락 든 생강 "...맛있네."',
+        '둘째 날 — 불판 위 지글지글 석화·흑백가리비. 모과 "오늘은 바다 플렉스다!!" / 생강 "배탈 안 나게 천천히 먹어."',
+        '둘째 날 밤 — 텐트 안 침낭에 나란히 누워 배 두드리며 "오늘 진짜 잘 먹었다..." 스르륵 잠.',
+        '셋째 날 아침 — 아침 햇살 드는 텐트 안, 생강만 먼저 깨서 눈 말똥말똥 누워 있음. 자막 "먼저 깨서 조용히 누워있던 생강"',
+        '위기 — 생강이 자는 줄 안 모과, 기지개 켜며 엉덩이 뒤로 분홍 연기 "뿌우웅—💨"',
+        '검거 — 고개만 스윽 돌린 무덤덤한 생강 "...잘 잤어?" / 이불 턱까지 올리고 얼굴 빨개진 모과 "어... 언제 깼어...?"',
+        '엔딩 — 뒷머리 긁적이는 모과 & 커피 마시는 생강 "아무튼 방어랑 석화가 잘못했네" / 자막 "캠핑 다음 날 아침엔 옆 사람 눈부터 확인하세요"'
+      ],
+      memo: '9장 캐러셀(1080×1080) — 표지 + 본편 7컷 + 엔딩 제작 완료.\n이미지: downloads/mosaeng_ep01_01.png ~ 09.png · 3×3 미리보기 downloads/mosaeng_ep01_preview.png\n인스타 업로드 후 카드의 ✅ 완료를 누르면 발행완료로 바뀝니다.\n\n캡션: 용인 소풍캠핑장 2박 3일 요약 ⛺ 첫날 첫 방어, 둘째 날 석화·흑백가리비, 셋째 날 아침... 생강이 자는 줄 알았던 모과의 최후 😂',
+      tags: '#모생일기 #인스타툰 #커플툰 #캠핑툰 #소풍캠핑장 #방어 #석화'
+    }
+  }
+];
+function appliedSeeds(){
+  try{
+    const raw = localStorage.getItem(LS_SEEDS);
+    const a = raw ? JSON.parse(raw) : [];
+    return Array.isArray(a) ? a : [];
+  }catch(e){ return []; }
+}
+function markSeed(key){
+  const a = appliedSeeds();
+  if(a.indexOf(key) < 0){ a.push(key); try{ localStorage.setItem(LS_SEEDS, JSON.stringify(a)); }catch(e){} }
+}
+function applySeeds(){
+  const done = appliedSeeds();
+  const added = [];
+  const t = nowISO();
+  SEEDS.forEach(s=>{
+    if(done.indexOf(s.key) >= 0) return;
+    if(items.some(i=>i.id === s.item.id)){ markSeed(s.key); return; }
+    const it = Object.assign({}, s.item, {
+      cuts: (s.item.cuts || []).slice(),
+      created_at: t, updated_at: t
+    });
+    items.unshift(it);
+    added.push(it);
+    markSeed(s.key);
+  });
+  if(added.length) persist();
+  return added;
+}
+
 /* ---------- helpers ---------- */
 function fmtDate(iso){
   const d = new Date(iso);
@@ -777,10 +852,12 @@ function renderList(){
     const idx = (it.cuts||[]).findIndex(t=>(t||'').trim());
     const excerpt = idx >= 0 ? `<span class="n">${idx+1}컷</span>${esc(it.cuts[idx])}` : (it.memo ? esc(it.memo) : '아직 컷을 안 적었어요');
     const n = filledCuts(it);
+    const isDone = it.status === 'done';
     return `<article class="card" data-id="${it.id}" data-status="${it.status}" tabindex="0" role="button" aria-label="${esc(it.title)} 상세 보기">
       <div class="card-top">
         <span class="pill ${it.status}">${s.emoji} ${s.label}</span>
         <span class="cat-tag">${c.emoji} ${c.label}</span>
+        <button type="button" class="done-toggle${isDone?' is-done':''}" data-done="${it.id}" aria-pressed="${isDone}" aria-label="${esc(it.title)} · ${isDone?'발행완료, 누르면 이전 상태로 돌려요':'발행완료로 체크'}">${isDone ? '✅ 발행완료' : '<span class="ck">✓</span> 완료'}</button>
       </div>
       <h3 class="card-title">${esc(it.title || '(제목 없음)')}</h3>
       <p class="card-excerpt">${excerpt}</p>
@@ -837,14 +914,14 @@ const F = {
 };
 let form = { author:'모과', category:'wedding', status:'idea', cuts:['','','',''] };
 
-function buildCutFields(){
-  document.getElementById('fCuts').innerHTML = [0,1,2,3].map(i=>`
+function buildCutFields(count){
+  const n = Math.max(4, count || 4);
+  document.getElementById('fCuts').innerHTML = Array.from({length:n}, (_,i)=>`
     <div class="cutrow">
       <span class="cutno">${i+1}컷</span>
-      <textarea data-cut="${i}" rows="2" placeholder="${
-        ['첫 장면 · 상황과 첫 대사','이어지는 장면 · 표정/행동','반전이나 웃음 포인트','마무리 · 내레이션/여운'][i]
-      }"></textarea>
-    </div>`).join('');
+      <textarea data-cut="${i}" rows="2" placeholder="${cutPlaceholder(i)}"></textarea>
+    </div>`).join('')
+    + '<button type="button" class="add-cut" id="fAddCut">＋ 컷 추가</button>';
   document.querySelectorAll('#fCuts textarea').forEach(ta=>{
     ta.addEventListener('input', ()=>{
       form.cuts[Number(ta.dataset.cut)] = ta.value;
@@ -853,6 +930,19 @@ function buildCutFields(){
     autosize(ta);
   });
 }
+const CUT_PH = ['첫 장면 · 상황과 첫 대사','이어지는 장면 · 표정/행동','반전이나 웃음 포인트','마무리 · 내레이션/여운'];
+function cutPlaceholder(i){
+  return i < CUT_PH.length ? CUT_PH[i] : `${i+1}컷 상황·대사`;
+}
+document.getElementById('fCuts').addEventListener('click', e=>{
+  if(!e.target.closest('#fAddCut')) return;
+  const cur = [...document.querySelectorAll('#fCuts textarea')].map(t=>t.value);
+  form.cuts = cur.concat(['']);
+  buildCutFields(form.cuts.length);
+  const tas = [...document.querySelectorAll('#fCuts textarea')];
+  tas.forEach((ta,i)=>{ ta.value = form.cuts[i] || ''; autosize(ta); });
+  if(tas.length) tas[tas.length-1].focus();
+});
 function autosize(ta){ ta.style.height='auto'; ta.style.height = Math.max(44, ta.scrollHeight)+'px'; }
 
 function buildOpts(){
@@ -872,14 +962,14 @@ function openEditor(id){
   editingId = id || null;
   const it = id ? items.find(i=>i.id===id) : null;
   form = it
-    ? { author:it.author, category:it.category, status:it.status, cuts:[0,1,2,3].map(i=>(it.cuts&&it.cuts[i])||'') }
+    ? { author:it.author, category:it.category, status:it.status, cuts:((it.cuts && it.cuts.length) ? it.cuts.slice() : ['','','','']) }
     : { author:'모과', category:'wedding', status:'idea', cuts:['','','',''] };
   document.getElementById('edTitle').textContent = it ? '콘티 수정' : '새 글콘티';
   document.getElementById('edDelete').hidden = !it;
   F.title().value = it ? it.title : '';
   F.memo().value = it ? (it.memo||'') : '';
   F.tags().value = it ? (it.tags||'') : '';
-  buildCutFields();
+  buildCutFields(form.cuts.length);
   document.querySelectorAll('#fCuts textarea').forEach(ta=>{
     ta.value = form.cuts[Number(ta.dataset.cut)] || '';
     autosize(ta);
@@ -893,6 +983,7 @@ function saveEditor(){
   const title = F.title().value.trim();
   if(!title){ toast('제목을 먼저 적어주세요 ✏️'); F.title().focus(); return; }
   const cuts = [...document.querySelectorAll('#fCuts textarea')].map(t=>t.value.trim());
+  while(cuts.length > 4 && !cuts[cuts.length-1]) cuts.pop();
   const payload = {
     title,
     author: form.author,
@@ -908,6 +999,7 @@ function saveEditor(){
     const i = items.findIndex(x=>x.id===editingId);
     if(i < 0) return;
     saved = Object.assign({}, items[i], payload, { updated_at:t });
+    if(payload.status === 'done' && items[i].status !== 'done') saved.prev_status = items[i].status;
     items[i] = saved;
   }else{
     saved = Object.assign({ id:uid(), created_at:t, updated_at:t, deleted:false }, payload);
@@ -951,7 +1043,7 @@ function openDetail(id){
     <div class="d-actions">
       <button class="btn btn-ghost btn-sm" id="dDelete" style="height:40px">🗑 삭제</button>
     </div>
-    <p class="d-hint">카드를 길게 눌러도 상태를 바꿀 수 있어요</p>`;
+    <p class="d-hint">목록 카드의 ✅ 완료 버튼으로 바로 체크할 수 있어요</p>`;
   openSheet('shDetail','bdDetail');
 }
 
@@ -986,6 +1078,31 @@ async function copyText(text){
     toast('시루에게 보낼 콘티를 복사했어요 📋 채팅에 붙여넣기!');
   }catch(e){
     toast('복사가 안 됐어요. 길게 눌러 직접 복사해 주세요.');
+  }
+}
+
+/* ---------- status ---------- */
+function setStatus(it, next){
+  const prev = it.status;
+  if(next === prev) return false;
+  if(next === 'done') it.prev_status = prev;
+  it.status = next;
+  it.updated_at = nowISO();
+  persist();
+  pushOne(it);
+  renderAll();
+  return true;
+}
+function toggleDone(id){
+  const it = items.find(i=>i.id===id);
+  if(!it) return;
+  if(it.status === 'done'){
+    const back = (it.prev_status && it.prev_status !== 'done' && STATS.some(s=>s.key===it.prev_status)) ? it.prev_status : 'making';
+    setStatus(it, back);
+    toast(`${statOf(back).emoji} ${statOf(back).label}로 되돌렸어요`);
+  }else{
+    setStatus(it, 'done');
+    toast('✅ 발행완료로 체크했어요');
   }
 }
 
@@ -1092,10 +1209,13 @@ document.getElementById('qClear').addEventListener('click', ()=>{
 });
 
 document.getElementById('list').addEventListener('click', e=>{
+  const tb = e.target.closest('[data-done]');
+  if(tb){ e.stopPropagation(); toggleDone(tb.dataset.done); return; }
   const card = e.target.closest('.card');
   if(card) openDetail(card.dataset.id);
 });
 document.getElementById('list').addEventListener('keydown', e=>{
+  if(e.target.closest('[data-done]')) return;
   const card = e.target.closest('.card');
   if(card && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); openDetail(card.dataset.id); }
 });
@@ -1105,8 +1225,7 @@ document.getElementById('dBody').addEventListener('click', e=>{
   if(opt){
     const it = items.find(i=>i.id===detailId);
     if(!it) return;
-    it.status = opt.dataset.status; it.updated_at = nowISO();
-    persist(); pushOne(it); renderAll();
+    if(!setStatus(it, opt.dataset.status)) return;
     document.querySelectorAll('#dStatusOpts .opt').forEach(b=>b.classList.toggle('active', b.dataset.status===it.status));
     const pill = document.querySelector('#dBody .d-meta .pill');
     if(pill){ pill.className = 'pill ' + it.status; pill.textContent = `${statOf(it.status).emoji} ${statOf(it.status).label}`; }
@@ -1313,7 +1432,7 @@ document.getElementById('sImportFile').addEventListener('change', async e=>{
       const it = {
         id: raw.id || uid(), title: raw.title, author: raw.author || '모과',
         category: raw.category || 'wedding', status: raw.status || 'idea',
-        cuts: Array.isArray(raw.cuts) ? raw.cuts.slice(0,4) : ['','','',''],
+        cuts: Array.isArray(raw.cuts) ? raw.cuts.slice(0,30) : ['','','',''],
         memo: raw.memo || '', tags: raw.tags || '',
         created_at: raw.created_at || nowISO(), updated_at: raw.updated_at || nowISO()
       };
@@ -1330,6 +1449,7 @@ document.getElementById('sImportFile').addEventListener('change', async e=>{
 /* ---------- boot ---------- */
 loadLocal();
 seed();
+applySeeds();
 buildOpts();
 renderAll();
 (function autoConnect(){
