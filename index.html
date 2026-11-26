@@ -469,6 +469,7 @@ img{max-width:100%}
   transition:transform .14s ease, filter .14s ease;
 }
 .btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.55;pointer-events:none}
 .btn-primary{flex:1;background:linear-gradient(180deg,#C4936A,#B5845A);color:#FFF9F1;box-shadow:0 8px 18px rgba(138,98,64,.26), inset 0 1px 0 rgba(255,255,255,.24)}
 .btn-ghost{background:#F7EFE4;color:var(--ink-soft)}
 .btn-danger{background:#FBE9E4;color:#B4563F}
@@ -516,6 +517,80 @@ details.howto summary{cursor:pointer;color:var(--ginger);font-weight:700;font-si
 details.howto ol{padding-left:17px;margin:7px 0 0}
 details.howto li{margin-bottom:4px}
 code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* ---------- 툴바 (릴스·해시태그) ---------- */
+.quickbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px}
+.qbtn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  height:44px;border-radius:14px;background:var(--paper);border:1px solid var(--line);
+  box-shadow:0 2px 8px rgba(181,132,90,.06);
+  font-size:12.5px;font-weight:700;color:var(--ginger-deep);letter-spacing:-.3px;
+  transition:transform .14s ease, background .14s ease;
+}
+.qbtn .em{font-size:16px;line-height:1}
+.qbtn:active{transform:scale(.97);background:var(--quince-soft)}
+.qbtn.accent{background:linear-gradient(180deg,#FDEFC6,#FBE8B6);border-color:var(--quince-line)}
+
+/* ---------- 황금 해시태그 ---------- */
+.gold-chips{display:flex;flex-wrap:wrap;gap:6px}
+.gold-chips .g{
+  display:inline-flex;align-items:center;padding:6px 11px;border-radius:999px;
+  background:#FDF6E8;border:1px solid var(--quince-line);
+  font-size:12px;font-weight:700;color:var(--ginger-deep);letter-spacing:-.2px;
+  transition:background .14s ease;
+}
+.gold-chips .g:active{background:var(--quince-soft)}
+.d-gold{margin:12px 0 2px;background:#FFFCF6;border:1px solid var(--line);border-radius:15px;padding:11px 12px}
+.d-gold-top{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.d-gold-top b{font-size:12px;color:var(--ginger-deep);font-weight:700;letter-spacing:-.3px}
+.d-gold-top .hint{font-size:10px;color:#B3A492;margin-left:auto;letter-spacing:-.2px}
+.d-gold-top .mini{
+  width:24px;height:24px;border-radius:8px;background:#F7EFE4;color:var(--ginger-deep);
+  font-size:11px;display:grid;place-items:center;flex:0 0 auto;
+}
+.d-gold-top .mini:active{transform:scale(.94)}
+.d-gold-acts{display:flex;gap:6px;margin-top:9px}
+.d-gold-acts .btn{flex:1 1 0;min-width:0;padding:0 8px;font-size:12px}
+.d-tools{display:flex;gap:6px;margin-top:10px}
+.d-tools .btn{flex:1}
+.tg-th{margin-top:14px;background:#FDF6E8;border:1px dashed var(--quince-line);border-radius:15px;padding:12px}
+.tg-th .tarea{background:#FFFDF8;font-size:13px;min-height:74px}
+
+/* ---------- 릴스 만들기 ---------- */
+.rl-thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:9px}
+.rl-thumbs:empty{margin-top:0}
+.rl-th{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#F2EADD;aspect-ratio:1/1}
+.rl-th img{width:100%;height:100%;object-fit:cover;display:block}
+.rl-th .num{
+  position:absolute;left:4px;top:4px;background:rgba(74,59,46,.74);color:#FFF8EE;
+  font-size:10px;font-weight:700;border-radius:7px;padding:1px 6px;font-family:var(--hand);line-height:1.35;
+}
+.rl-th .ops{position:absolute;right:3px;bottom:3px;display:flex;gap:3px}
+.rl-th .ops button{
+  width:21px;height:21px;border-radius:7px;background:rgba(255,253,248,.94);
+  font-size:10px;display:grid;place-items:center;color:var(--ginger-deep);
+  box-shadow:0 1px 3px rgba(74,59,46,.22);line-height:1;
+}
+.rl-th .ops button:active{transform:scale(.92);background:var(--quince-soft)}
+.rl-th .ops button.del{color:#B4563F}
+.rl-empty-hint{
+  margin:9px 0 0;padding:14px 10px;border:1px dashed var(--line);border-radius:12px;
+  text-align:center;font-size:11.5px;color:#B3A492;line-height:1.55;letter-spacing:-.2px;
+}
+.rl-prog{display:flex;align-items:center;gap:9px;margin-top:10px}
+.rl-track{flex:1;height:7px;border-radius:4px;background:#F0E5D5;overflow:hidden}
+.rl-track i{display:block;height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,#F4C95D,#C4936A);transition:width .1s linear}
+.rl-pct{font-family:var(--hand);font-size:13px;font-weight:700;color:var(--ginger-deep);min-width:48px;text-align:right}
+.rl-state{font-size:11px;color:var(--ink-soft);margin:7px 0 0;letter-spacing:-.2px;line-height:1.5}
+.rl-result{margin-top:12px;background:#FFFCF6;border:1px solid var(--line);border-radius:15px;padding:10px}
+.rl-video{display:block;margin:0 auto;max-width:100%;max-height:340px;border-radius:12px;background:#2A2119}
+.rl-badge{
+  display:inline-flex;align-items:center;gap:5px;margin-bottom:8px;
+  font-size:10.5px;font-weight:700;color:#4E7A63;background:#E4EFEA;
+  border-radius:999px;padding:3px 9px;letter-spacing:-.2px;
+}
+.rl-note{font-size:10.5px;color:#9A8B78;line-height:1.6;margin:8px 0 0;letter-spacing:-.2px}
+.rl-save{width:100%;margin-top:9px}
 
 /* ---------- toast ---------- */
 .toast{
@@ -572,6 +647,7 @@ code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-fa
       </div>
     </div>
     <div class="topbar-actions">
+      <button class="icon-btn" id="btnReelsTop" aria-label="릴스 만들기" title="릴스 만들기">🎬</button>
       <button class="icon-btn" id="btnSettings" aria-label="연동 설정">
         <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#B5845A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="3.1"></circle>
@@ -591,6 +667,11 @@ code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-fa
     </div>
     <div class="stats" id="stats"></div>
   </section>
+
+  <div class="quickbar">
+    <button class="qbtn accent" id="btnReels"><span class="em">🎬</span> 릴스 만들기</button>
+    <button class="qbtn" id="btnTags"><span class="em">🏷️</span> 해시태그 5개</button>
+  </div>
 
   <section class="cast" aria-label="등장인물 도감">
     <div class="cast-head">
@@ -796,6 +877,95 @@ code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-fa
   <div class="sheet-body" id="pcBody"></div>
   <div class="sheet-foot">
     <button class="btn btn-primary" id="pcFilter">이 인물 콘티 모아보기</button>
+  </div>
+</section>
+
+<!-- ============ 황금 해시태그 5개 · 스레드 문구 ============ -->
+<div class="backdrop" id="bdTags" data-close="tags"></div>
+<section class="sheet" id="shTags" role="dialog" aria-modal="true" aria-labelledby="tgTitle">
+  <div class="sheet-head">
+    <div class="grab"></div>
+    <div class="sheet-title-row">
+      <h2 id="tgTitle">🏷️ 황금 해시태그 5개</h2>
+      <button class="sheet-close" id="tgClose" aria-label="닫기">✕</button>
+    </div>
+  </div>
+  <div class="sheet-body" id="tgBody"></div>
+  <div class="sheet-foot">
+    <button class="btn btn-line" id="tgRefresh">🔄 다른 5개</button>
+    <button class="btn btn-primary" id="tgCopy">📋 5개 복사</button>
+  </div>
+</section>
+
+<!-- ============ 릴스 만들기 ============ -->
+<div class="backdrop" id="bdReels" data-close="reels"></div>
+<section class="sheet" id="shReels" role="dialog" aria-modal="true" aria-labelledby="rlTitle">
+  <div class="sheet-head">
+    <div class="grab"></div>
+    <div class="sheet-title-row">
+      <h2 id="rlTitle">🎬 릴스 만들기</h2>
+      <button class="sheet-close" id="rlClose" aria-label="닫기">✕</button>
+    </div>
+  </div>
+  <div class="sheet-body">
+    <div class="field">
+      <div class="flabel"><b>에피소드 제목</b><span class="hint">영상 위쪽에 들어가요</span></div>
+      <input class="tinput" id="rlName" maxlength="60" placeholder="예: EP.04 김장하러 가는길" autocomplete="off">
+    </div>
+
+    <div class="field">
+      <div class="flabel"><b>컷 이미지</b><span class="hint" id="rlCount">0 / 9장</span></div>
+      <button type="button" class="ocr-pick" id="rlPick">
+        <span class="ico">🖼️</span>
+        <span class="tx"><b>컷 이미지 고르기</b><em>1~9장 · 파일명 순서로 들어가요</em></span>
+        <span class="go">＋</span>
+      </button>
+      <input type="file" id="rlFile" accept="image/*" multiple hidden>
+      <div class="rl-thumbs" id="rlThumbs"></div>
+      <p class="rl-note">▲▼로 순서를 바꾸고 ✕로 빼요. 1080×1080 컷을 넣으면 가장 깔끔해요.</p>
+    </div>
+
+    <div class="field">
+      <div class="flabel"><b>화면 비율</b></div>
+      <div class="seg" id="rlRatio">
+        <button type="button" data-v="9:16" class="active">📱 9:16 릴스 세로</button>
+        <button type="button" data-v="1:1">⬛ 1:1 정사각</button>
+      </div>
+      <p class="rl-note" id="rlRatioNote">1080×1920 · 크림 배경 + 상단 제목 + 하단 진행바 (추천)</p>
+    </div>
+
+    <div class="field">
+      <div class="flabel"><b>컷당 시간</b><span class="hint" id="rlTotalHint"></span></div>
+      <div class="seg" id="rlSpeed">
+        <button type="button" data-v="1.5">1.5초</button>
+        <button type="button" data-v="1.8" class="active">1.8초 추천</button>
+        <button type="button" data-v="2.2">2.2초</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="flabel"><b>전환 효과</b></div>
+      <div class="seg" id="rlFade">
+        <button type="button" data-v="fade" class="active">🌗 부드러운 페이드</button>
+        <button type="button" data-v="cut">⚡ 바로 전환</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <button type="button" class="btn btn-primary" id="rlMake" style="width:100%">🎬 영상 만들기</button>
+      <div class="rl-prog" id="rlProg" hidden>
+        <div class="rl-track"><i id="rlBar"></i></div>
+        <span class="rl-pct" id="rlPct">0%</span>
+      </div>
+      <p class="rl-state" id="rlState">이미지를 고르고 영상 만들기를 누르면 폰 안에서 바로 렌더링해요.</p>
+    </div>
+
+    <div class="rl-result" id="rlResult" hidden>
+      <span class="rl-badge" id="rlBadge">MP4</span>
+      <video class="rl-video" id="rlVideo" controls playsinline preload="metadata"></video>
+      <button type="button" class="btn btn-primary rl-save" id="rlSave">📥 영상 저장</button>
+      <p class="rl-note">안드로이드 크롬은 MP4, 안 되는 브라우저는 WebM으로 저장돼요. 인스타 앱 → ＋ → 릴스 → 앨범에서 고르면 됩니다.</p>
+    </div>
   </div>
 </section>
 
@@ -1214,6 +1384,8 @@ function closeAll(){
   closeSheet('shDetail','bdDetail');
   closeSheet('shSet','bdSet');
   closeSheet('shCast','bdCast');
+  if(typeof closeReels === 'function') closeReels();
+  closeSheet('shTags','bdTags');
 }
 
 /* ---------- editor ---------- */
@@ -1365,6 +1537,21 @@ function openDetail(id){
       : '<div class="d-cut"><p style="color:#B3A492">아직 컷을 안 적었어요. 수정해서 채워볼까요?</p></div>'}
     ${it.memo ? `<div class="d-memo"><span class="lb">📌 자유 메모</span>${esc(it.memo)}</div>` : ''}
     ${it.tags ? `<div class="d-tags">${esc(it.tags)}</div>` : ''}
+    <div class="d-gold" id="dGold">
+      <div class="d-gold-top">
+        <b>🏷️ 황금 해시태그 5개</b>
+        <span class="hint">인스타 최대 5개</span>
+        <button type="button" class="mini" id="dGoldNew" aria-label="다른 5개 추천">🔄</button>
+      </div>
+      <div class="gold-chips" id="dGoldChips">${goldChipsHTML(goldTagsFor(it))}</div>
+      <div class="d-gold-acts">
+        <button type="button" class="btn btn-line btn-sm" id="dGoldCopy">📋 5개 복사</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="dGoldOpen">🏷️ 해시태그·스레드</button>
+      </div>
+    </div>
+    <div class="d-tools">
+      <button type="button" class="btn btn-line btn-sm" id="dReels">🎬 이 편으로 릴스 만들기</button>
+    </div>
     <div class="d-status">
       <span class="lb">상태 바로 바꾸기</span>
       <div class="opts" id="dStatusOpts">
@@ -1396,23 +1583,31 @@ function buildCopyText(it){
   if(it.tags) lines.push(`태그: ${it.tags}`);
   return lines.join('\n');
 }
-async function copyText(text){
+async function writeClipboard(text){
   try{
     if(navigator.clipboard && window.isSecureContext){
       await navigator.clipboard.writeText(text);
-    }else{
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.cssText = 'position:fixed;top:-1000px;left:0;opacity:0';
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      ta.remove();
+      return true;
     }
-    toast('시루에게 보낼 콘티를 복사했어요 📋 채팅에 붙여넣기!');
-  }catch(e){
-    toast('복사가 안 됐어요. 길게 눌러 직접 복사해 주세요.');
-  }
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;top:-1000px;left:0;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    ta.remove();
+    return ok;
+  }catch(e){ return false; }
+}
+function copyWithToast(text, okMsg){
+  writeClipboard(text).then(ok=>{
+    toast(ok ? (okMsg || '복사했어요 📋') : '복사가 안 됐어요. 길게 눌러 직접 복사해 주세요.');
+  });
+}
+async function copyText(text){
+  const ok = await writeClipboard(text);
+  toast(ok ? '시루에게 보낼 콘티를 복사했어요 📋 채팅에 붙여넣기!'
+           : '복사가 안 됐어요. 길게 눌러 직접 복사해 주세요.');
 }
 
 /* ---------- 카톡 캡처 → 콘티 (Tesseract.js, 지연 로드) ---------- */
@@ -1698,8 +1893,469 @@ function deleteItem(id){
   toast('콘티를 삭제했어요');
 }
 
+/* =========================================================
+   🏷️ 황금 해시태그 5개 · 🧵 스레드 맛보기 문구
+   - 인스타 게시글 해시태그는 최대 5개 → 항상 정확히 5개
+   ========================================================= */
+const GOLD_MAX = 5;
+const GOLD_BRAND = '#모생일기';
+const GOLD_GENERIC = [
+  '#인스타툰','#일상툰','#공감툰','#신혼일기','#커플툰','#부부툰',
+  '#일상만화','#가족툰','#웃긴썰','#만화스타그램','#그림스타그램','#일기툰'
+];
+const GOLD_TARGET = {
+  wedding: ['#결혼준비','#웨딩홀투어','#예비신부','#결혼스타그램','#웨딩준비','#드레스','#혼수','#결혼식','#프로포즈','#신혼집'],
+  daily:   ['#동거일상','#커플일상','#신혼생활','#부부일상','#집밥','#살림일기','#주말일상','#신혼집','#부부스타그램','#일상툰'],
+  trip:    ['#캠핑','#캠핑스타그램','#차박','#낚시','#낚시스타그램','#주말여행','#국내여행','#캠핑툰','#글램핑','#바다낚시'],
+  diet:    ['#다이어트','#다이어트일기','#식단관리','#체중감량','#새벽운동','#헬스스타그램','#운동일기','#홈트','#클린식','#다이어트툰']
+};
+const GOLD_KEYWORDS = [
+  { re:/(김장|김치)/, tags:['#김장썰','#김장','#김치담그기','#시골일상','#가족일상'] },
+  { re:/(방귀|방구)/, tags:['#방귀썰','#웃긴썰','#부부툰','#실화썰'] },
+  { re:/(웨딩|결혼|신부|드레스|예식|프로포즈)/, tags:['#결혼준비','#웨딩홀','#예비신부','#결혼스타그램'] },
+  { re:/(캠핑|텐트|차박|글램핑)/, tags:['#캠핑','#캠핑스타그램','#차박','#캠핑툰'] },
+  { re:/(낚시|낚싯대|입질|바다)/, tags:['#낚시','#낚시스타그램','#바다낚시','#주말낚시'] },
+  { re:/(여행|휴양지|비행기)/, tags:['#국내여행','#여행스타그램','#주말여행','#신혼여행'] },
+  { re:/(다이어트|식단|체중|감량|운동|홈트)/, tags:['#다이어트일기','#식단관리','#체중감량','#새벽운동'] },
+  { re:/(집밥|요리|먹방|수육|방어|석화|떡만두국|김치찌개)/, tags:['#집밥','#먹스타그램','#신혼밥상','#요리스타그램'] },
+  { re:/(콩이|강아지|포메|반려견|댕댕)/, tags:['#반려견','#포메라니안','#강아지스타그램','#댕댕이'] },
+  { re:/(동거|신혼|부부|남편|아내|와이프)/, tags:['#신혼생활','#부부일상','#동거일상','#커플일상'] },
+  { re:/(멜론|자두|대추|한라봉|능금|청포도|적포도|가족|처제)/, tags:['#가족툰','#가족일상','#처제','#가족스타그램'] }
+];
+const goldRot = {};
+const threadRot = {};
+let tagEpId = null;
+
+/* 대형/중형 일상툰 태그 2 + 주제 맞춤 태그 2 + 브랜드 1 = 5개 */
+function goldTags(it, rot){
+  if(!it) return [];
+  const text = (searchBlob(it) + ' ' + castOf(it).join(' ')).toLowerCase();
+  const cpool = GOLD_TARGET[it.category] || GOLD_TARGET.daily;
+  const kw = [];
+  GOLD_KEYWORDS.forEach(k=>{ if(k.re.test(text)) kw.push.apply(kw, k.tags); });
+  const out = [];
+  const push = t => { if(t && out.indexOf(t) < 0 && out.length < GOLD_MAX - 1) out.push(t); };
+  const pick = (arr, n, off) => {
+    const res = [];
+    if(!arr.length) return res;
+    const len = arr.length;
+    for(let i = 0; i < n; i++) res.push(arr[(((off % len) + len) % len) + i >= len ? 0 : (((off % len) + len) % len) + i]);
+    return res;
+  };
+  const pick2 = (arr, n, off) => {
+    const res = [];
+    if(!arr.length) return res;
+    for(let i = 0; i < n; i++) res.push(arr[((off + i) % arr.length + arr.length) % arr.length]);
+    return res;
+  };
+  const r = (typeof rot === 'number') ? rot : 0;
+  pick2(GOLD_GENERIC, 2, r * 2).forEach(push);
+  pick2(cpool, 1, r).forEach(push);
+  (kw.length ? pick2(kw, 1, r) : pick2(cpool, 1, r + 3)).forEach(push);
+  if(out.length < GOLD_MAX - 1){
+    cpool.concat(kw, GOLD_GENERIC).forEach(push);
+  }
+  return out.slice(0, GOLD_MAX - 1).concat([GOLD_BRAND]);
+}
+function goldTagsFor(it){
+  if(!it) return [];
+  return goldTags(it, goldRot[it.id] || 0);
+}
+function goldChipsHTML(tags){
+  return (tags || []).map(t=>`<span class="g">${esc(t)}</span>`).join('');
+}
+
+/* 1~2줄 스레드 훅 + @mosaeng.toon 안내 */
+function threadText(it, rot){
+  if(!it) return '';
+  const raw = String(it.title || '').trim();
+  const title = raw.replace(/^\s*EP\.?\s*\d+\s*/i, '').replace(/^[\s·,:;\-–—]+/, '').trim() || '모생일기 새 편';
+  const cuts = (it.cuts || []).map(t => (t || '').trim()).filter(Boolean);
+  const n = cuts.length || 9;
+  const first = cuts[0] || '';
+  const qm = first.match(/[“"]([^”"]{3,40})[”"]/);
+  const quote = qm ? qm[1].trim() : '';
+  const c = catOf(it.category);
+  const who = castOf(it).slice(0, 2).join('·') || '모과·생강';
+  const heads = [
+    quote ? `${title} · "${quote}" 이거 진짜 있었던 일 ㅋㅋ` : `${title} — 진짜 있었던 우리 집 썰`,
+    `${c.emoji} ${title} · ${who}의 하루`,
+    quote ? `"${quote}" 이 말 듣고 한참 웃었음 ㅋㅋ` : `${title}${josa(title,'은','는')} 이렇게 됐습니다`
+  ];
+  const tails = [
+    `이야기 전체 ${n}컷 → 인스타 @mosaeng.toon 🧡`,
+    `그림으로 다 그려놨어요 · 인스타 @mosaeng.toon 🧡`,
+    `${n}컷 전부 인스타 @mosaeng.toon 에 있어요 🧡`
+  ];
+  const k = Math.abs((typeof rot === 'number' ? rot : 0)) % 3;
+  return `${heads[k]}\n${tails[k]}`;
+}
+
+function tagEpisode(){
+  if(!tagEpId) return null;
+  return items.find(i=>i.id === tagEpId) || null;
+}
+function openTags(id){
+  const first = sorted()[0];
+  tagEpId = id || tagEpId || (first ? first.id : null);
+  if(!items.some(i=>i.id === tagEpId)) tagEpId = first ? first.id : null;
+  renderTagsSheet();
+  openSheet('shTags','bdTags');
+}
+function renderTagsSheet(){
+  const body = document.getElementById('tgBody');
+  const copyBtn = document.getElementById('tgCopy');
+  const it = tagEpisode();
+  if(!it){
+    body.innerHTML = '<p class="rl-empty-hint" style="border-style:solid">아직 콘티가 없어요.<br>글콘티를 하나 써두면 해시태그 5개를 만들어 드려요.</p>';
+    if(copyBtn) copyBtn.disabled = true;
+    return;
+  }
+  if(copyBtn) copyBtn.disabled = false;
+  const c = catOf(it.category);
+  const tags = goldTagsFor(it);
+  const th = threadText(it, threadRot[it.id] || 0);
+  body.innerHTML = `
+    <div class="field">
+      <div class="flabel"><b>에피소드</b><span class="hint">${c.emoji} ${c.label}</span></div>
+      <select class="tinput" id="tgPick" aria-label="에피소드 고르기">
+        ${sorted().map(x=>`<option value="${x.id}" ${x.id===it.id?'selected':''}>${esc(x.title || '(제목 없음)')}</option>`).join('')}
+      </select>
+    </div>
+    <div class="field">
+      <div class="flabel"><b>오늘의 황금 조합</b><span class="hint">딱 5개</span></div>
+      <div class="gold-chips" id="tgChips">${goldChipsHTML(tags)}</div>
+      <p class="rl-note">인스타 해시태그는 최대 5개 · 대형 일상툰 2개 + 주제 맞춤 2개 + 브랜드 1개로 맞추었어요.</p>
+    </div>
+    <div class="tg-th">
+      <div class="d-gold-top"><b>🧵 스레드 맛보기 문구</b><span class="hint">인스타 유입용</span></div>
+      <textarea class="tarea" id="tgThread" rows="3" spellcheck="false">${esc(th)}</textarea>
+      <div class="d-gold-acts">
+        <button type="button" class="btn btn-line btn-sm" id="tgThreadCopy">📋 스레드 문구 복사</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="tgThreadNew">🔄 다시 쓰기</button>
+      </div>
+    </div>`;
+}
+
+/* =========================================================
+   🎬 9컷 → 릴스 영상 변환기 (Canvas + MediaRecorder)
+   ========================================================= */
+const RL = { ratio:'9:16', cutSec:1.8, fade:true, items:[], busy:false, abort:false, result:null };
+const rlEl = id => document.getElementById(id);
+
+function rlPaint(){
+  const n = RL.items.length;
+  rlEl('rlCount').textContent = `${n} / 9장`;
+  document.querySelectorAll('#rlRatio button').forEach(b=>b.classList.toggle('active', b.dataset.v === RL.ratio));
+  document.querySelectorAll('#rlSpeed button').forEach(b=>b.classList.toggle('active', Number(b.dataset.v) === RL.cutSec));
+  document.querySelectorAll('#rlFade button').forEach(b=>b.classList.toggle('active', (b.dataset.v === 'fade') === RL.fade));
+  rlEl('rlRatioNote').textContent = RL.ratio === '9:16'
+    ? '1080×1920 · 크림 배경 + 상단 제목 + 하단 진행바 (추천)'
+    : '1080×1080 · 여백 없이 꽉 찬 정사각 슬라이드';
+  rlEl('rlTotalHint').textContent = n ? `${n}컷 · ${(n * RL.cutSec).toFixed(1)}초` : '';
+  rlRenderThumbs();
+}
+function rlRenderThumbs(){
+  const box = rlEl('rlThumbs');
+  if(!RL.items.length){
+    box.innerHTML = '<p class="rl-empty-hint" style="grid-column:1/-1">아직 고른 컷이 없어요.<br>위 버튼으로 1~9장을 골라주세요.</p>';
+    return;
+  }
+  box.innerHTML = RL.items.map((x,i)=>`
+    <div class="rl-th">
+      <img src="${x.url}" alt="${esc(x.name)}">
+      <span class="num">${i+1}</span>
+      <span class="ops">
+        <button type="button" data-act="up" data-i="${i}" aria-label="앞으로">▲</button>
+        <button type="button" data-act="down" data-i="${i}" aria-label="뒤로">▼</button>
+        <button type="button" class="del" data-act="del" data-i="${i}" aria-label="빼기">✕</button>
+      </span>
+    </div>`).join('');
+}
+function rlLoadImage(url){
+  return new Promise(res=>{
+    const img = new Image();
+    img.onload = ()=>res(img);
+    img.onerror = ()=>res(null);
+    img.src = url;
+  });
+}
+async function rlAddFiles(list){
+  const files = Array.from(list || []).filter(f=>/^image\//.test(f.type));
+  if(!files.length){ toast('이미지 파일을 골라주세요 🖼️'); return; }
+  files.sort((a,b)=>String(a.name).localeCompare(String(b.name), undefined, {numeric:true, sensitivity:'base'}));
+  let over = false;
+  for(const f of files){
+    if(RL.items.length >= 9){ over = true; break; }
+    if(RL.items.some(x=>x.name === f.name && x.size === f.size)) continue;
+    const url = URL.createObjectURL(f);
+    let bmp = null;
+    try{ bmp = await createImageBitmap(f, {imageOrientation:'from-image'}); }
+    catch(e){ try{ bmp = await createImageBitmap(f); }catch(e2){ bmp = await rlLoadImage(url); } }
+    if(!bmp){ URL.revokeObjectURL(url); continue; }
+    RL.items.push({ file:f, size:f.size, name:f.name, url, bmp });
+  }
+  if(over) toast('최대 9장까지만 넣을 수 있어요');
+  rlPaint();
+}
+
+function rlRoundRect(ctx, x, y, w, h, r){
+  const rr = Math.max(0, Math.min(r, w/2, h/2));
+  ctx.beginPath();
+  ctx.moveTo(x+rr, y);
+  ctx.arcTo(x+w, y, x+w, y+h, rr);
+  ctx.arcTo(x+w, y+h, x, y+h, rr);
+  ctx.arcTo(x, y+h, x, y, rr);
+  ctx.arcTo(x, y, x+w, y, rr);
+  ctx.closePath();
+}
+function rlFit(ctx, text, maxW){
+  let t = String(text || '');
+  if(ctx.measureText(t).width <= maxW) return t;
+  while(t.length > 1 && ctx.measureText(t + '…').width > maxW) t = t.slice(0, -1);
+  return t + '…';
+}
+function rlDrawCover(ctx, img, x, y, w, h){
+  const iw = img.width || img.naturalWidth || 1;
+  const ih = img.height || img.naturalHeight || 1;
+  const s = Math.max(w/iw, h/ih);
+  const dw = iw*s, dh = ih*s;
+  ctx.drawImage(img, x + (w-dw)/2, y + (h-dh)/2, dw, dh);
+}
+function rlHeart(ctx, cx, cy, size){
+  const s = size;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy + s*0.78);
+  ctx.bezierCurveTo(cx - s*1.15, cy - s*0.06, cx - s*0.62, cy - s*0.98, cx, cy - s*0.34);
+  ctx.bezierCurveTo(cx + s*0.62, cy - s*0.98, cx + s*1.15, cy - s*0.06, cx, cy + s*0.78);
+  ctx.closePath();
+  ctx.fill();
+}
+function rlDraw(ctx, opt){
+  const W = opt.W, H = opt.H;
+  ctx.save();
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = '#FFFBF2';
+  ctx.fillRect(0, 0, W, H);
+
+  if(opt.ratio === '1:1'){
+    ctx.globalAlpha = opt.alpha;
+    rlDrawCover(ctx, opt.img, 0, 0, W, H);
+    ctx.restore();
+    return;
+  }
+
+  const sq = 1080, sx = 0, sy = (H - sq) / 2;
+  ctx.save();
+  rlRoundRect(ctx, sx, sy, sq, sq, 26);
+  ctx.clip();
+  ctx.globalAlpha = opt.alpha;
+  rlDrawCover(ctx, opt.img, sx, sy, sq, sq);
+  ctx.restore();
+  ctx.globalAlpha = 1;
+
+  const topText = opt.title ? `@mosaeng.toon · ${opt.title}` : '@mosaeng.toon';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = '#8A6240';
+  ctx.font = '700 46px "Gaegu", "Gowun Dodum", sans-serif';
+  ctx.fillText(rlFit(ctx, topText, W - 140), W/2, sy - 148);
+
+  const total = opt.total, idx = opt.index, p = opt.p;
+  const barX = 90, barW = W - 180, barY = sy + sq + 62, gap = 6;
+  const segW = (barW - gap * (total - 1)) / total;
+  for(let i = 0; i < total; i++){
+    const x = barX + i * (segW + gap);
+    rlRoundRect(ctx, x, barY, segW, 10, 5);
+    ctx.fillStyle = '#EFE3D2';
+    ctx.fill();
+    const f = i < idx ? 1 : (i === idx ? p : 0);
+    if(f > 0.002){
+      rlRoundRect(ctx, x, barY, Math.max(6, segW * f), 10, 5);
+      ctx.fillStyle = '#B5845A';
+      ctx.fill();
+    }
+  }
+
+  ctx.font = '700 40px "Gowun Dodum", sans-serif';
+  ctx.fillStyle = '#8B7A69';
+  ctx.textAlign = 'left';
+  ctx.fillText(`${idx + 1}/${total}`, barX, barY + 80);
+
+  const last = idx >= total - 1;
+  const rightText = last ? '좋아요 · 저장 · 팔로우' : '다음 컷 ▶';
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#B5845A';
+  ctx.font = last ? '700 36px "Gowun Dodum", sans-serif' : '700 40px "Gowun Dodum", sans-serif';
+  ctx.fillText(rightText, barX + barW - (last ? 48 : 0), barY + 80);
+  if(last){
+    ctx.fillStyle = '#F4C95D';
+    rlHeart(ctx, barX + barW - 22, barY + 66, 17);
+  }
+  ctx.restore();
+}
+function rlRender(canvas, ctx, opt, onProgress){
+  return new Promise(resolve=>{
+    const total = opt.images.length;
+    const dur = opt.cutSec;
+    const overall = total * dur;
+    const t0 = performance.now();
+    let lastPct = -1;
+    function frame(now){
+      if(RL.abort){ resolve({ aborted:true }); return; }
+      const el = Math.max(0, (now - t0) / 1000);
+      const idx = Math.max(0, Math.min(total - 1, Math.floor(el / dur)));
+      const tIn = Math.max(0, el - idx * dur);
+      const p = Math.max(0, Math.min(1, tIn / dur));
+      const alpha = (opt.fade && idx > 0) ? Math.max(0.002, Math.min(1, tIn / 0.36)) : 1;
+      rlDraw(ctx, { W:opt.W, H:opt.H, ratio:opt.ratio, img:opt.images[idx], title:opt.title,
+                    index:idx, total, p, alpha });
+      const pct = Math.min(100, Math.round((el / overall) * 100));
+      if(pct !== lastPct){ lastPct = pct; if(onProgress) onProgress(pct, idx, total, el); }
+      if(el < overall){
+        requestAnimationFrame(frame);
+      }else{
+        rlDraw(ctx, { W:opt.W, H:opt.H, ratio:opt.ratio, img:opt.images[total-1], title:opt.title,
+                      index:total-1, total, p:1, alpha:1 });
+        if(onProgress) onProgress(100, total-1, total, overall);
+        resolve({ aborted:false });
+      }
+    }
+    requestAnimationFrame(frame);
+  });
+}
+function rlPickMime(){
+  if(typeof MediaRecorder === 'undefined') return '';
+  const list = ['video/mp4;codecs=avc1.42E01E','video/mp4;codecs=avc1','video/mp4',
+                'video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
+  for(const m of list){
+    let ok = false;
+    try{ ok = MediaRecorder.isTypeSupported(m); }catch(e){}
+    if(ok) return m;
+  }
+  return '';
+}
+function rlSetBusy(b){
+  const btn = rlEl('rlMake');
+  btn.disabled = !!b;
+  btn.textContent = b ? '⏳ 영상 만드는 중…' : '🎬 영상 만들기';
+  btn.style.opacity = b ? '.65' : '1';
+}
+async function rlMake(){
+  if(RL.busy) return;
+  const imgs = RL.items.map(x=>x.bmp).filter(Boolean);
+  if(!imgs.length){ toast('컷 이미지를 1장 이상 골라주세요 🖼️'); return; }
+  if(typeof MediaRecorder === 'undefined'){
+    toast('이 브라우저는 영상 저장을 지원하지 않아요 · 크롬에서 열어주세요');
+    return;
+  }
+  const W = 1080, H = RL.ratio === '1:1' ? 1080 : 1920;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  if(!canvas.captureStream){
+    toast('이 브라우저는 영상 저장을 지원하지 않아요 · 크롬에서 열어주세요');
+    return;
+  }
+  RL.busy = true; RL.abort = false;
+  rlSetBusy(true);
+  rlEl('rlResult').hidden = true;
+  rlEl('rlProg').hidden = false;
+  rlEl('rlBar').style.width = '0%';
+  rlEl('rlPct').textContent = '0%';
+  rlEl('rlState').textContent = '영상 만드는 중… 이 화면을 닫지 말아 주세요.';
+  try{
+    if(document.fonts){
+      try{ await document.fonts.ready; }catch(e){}
+      try{
+        await Promise.all([
+          document.fonts.load('700 46px Gaegu'),
+          document.fonts.load('400 40px "Gowun Dodum"')
+        ]);
+      }catch(e){}
+    }
+    const mime = rlPickMime();
+    const stream = canvas.captureStream(30);
+    let rec;
+    try{
+      rec = new MediaRecorder(stream, mime ? { mimeType:mime, videoBitsPerSecond:5000000 } : undefined);
+    }catch(e){
+      rec = new MediaRecorder(stream);
+    }
+    const chunks = [];
+    rec.ondataavailable = e => { if(e.data && e.data.size) chunks.push(e.data); };
+    const stopped = new Promise(res => { rec.onstop = res; });
+    rec.start(250);
+    const out = await rlRender(canvas, ctx, {
+      W, H, ratio:RL.ratio, images:imgs,
+      title: rlEl('rlName').value.trim(),
+      cutSec: RL.cutSec, fade: RL.fade
+    }, (pct, idx, total, el)=>{
+      rlEl('rlBar').style.width = pct + '%';
+      rlEl('rlPct').textContent = pct + '%';
+      rlEl('rlState').textContent = `${idx + 1}/${total}컷 그리는 중 · ${el.toFixed(1)}초`;
+    });
+    if(out.aborted){
+      try{ rec.stop(); }catch(e){}
+      stream.getTracks().forEach(t=>t.stop());
+      rlEl('rlProg').hidden = true;
+      rlEl('rlState').textContent = '영상 만들기를 멈췄어요. 다시 누르면 새로 만들어요.';
+      return;
+    }
+    await new Promise(r=>setTimeout(r, 320));
+    try{ rec.stop(); }catch(e){}
+    await stopped;
+    stream.getTracks().forEach(t=>t.stop());
+    const type = String(rec.mimeType || mime || 'video/webm');
+    const blob = new Blob(chunks, { type: type.split(';')[0] });
+    if(!blob.size) throw new Error('empty');
+    if(RL.result && RL.result.url){ try{ URL.revokeObjectURL(RL.result.url); }catch(e){} }
+    const ext = /mp4/i.test(type) ? 'mp4' : 'webm';
+    RL.result = { blob, url: URL.createObjectURL(blob), ext, mime:type, sec: imgs.length * RL.cutSec, n: imgs.length };
+    const v = rlEl('rlVideo');
+    v.onloadedmetadata = ()=>{ try{ v.currentTime = Math.min(0.5, (RL.result.sec || 1) / 2); }catch(e){} };
+    v.src = RL.result.url;
+    rlEl('rlBadge').textContent = `${ext.toUpperCase()} · ${RL.result.sec.toFixed(1)}초 · ${imgs.length}컷 · ${(blob.size / 1048576).toFixed(1)}MB`;
+    rlEl('rlResult').hidden = false;
+    rlEl('rlProg').hidden = true;
+    rlEl('rlState').textContent = '영상이 나왔어요 · 미리보기로 확인하고 저장하세요 🎬';
+    toast('릴스 영상을 만들었어요 🎬');
+    try{ v.scrollIntoView({ behavior:'smooth', block:'center' }); }catch(e){}
+  }catch(err){
+    rlEl('rlProg').hidden = true;
+    rlEl('rlState').textContent = '영상 만들기에 실패했어요 · 컷 수를 줄이거나 다시 시도해 주세요.';
+    toast('영상 만들기가 안 됐어요 · 다시 시도해 주세요');
+  }finally{
+    RL.busy = false;
+    rlSetBusy(false);
+  }
+}
+function rlSave(){
+  if(!RL.result){ toast('먼저 영상을 만들어 주세요 🎬'); return; }
+  const d = new Date();
+  const stamp = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  const base = rlEl('rlName').value.trim().replace(/[\\/:*?"<>|]/g, '').slice(0, 28) || '릴스';
+  const a = document.createElement('a');
+  a.href = RL.result.url;
+  a.download = `모생일기-${base}-${stamp}.${RL.result.ext}`;
+  document.body.appendChild(a); a.click(); a.remove();
+  toast('영상을 저장했어요 📥 다운로드 폴더를 확인해 주세요');
+}
+function openReels(it){
+  if(it) rlEl('rlName').value = it.title || '';
+  rlPaint();
+  openSheet('shReels','bdReels');
+}
+function closeReels(){
+  if(RL.busy) RL.abort = true;
+  closeSheet('shReels','bdReels');
+}
+
 /* ---------- events ---------- */
 document.getElementById('btnNew').addEventListener('click', ()=>openEditor(null));
+document.getElementById('btnReels').addEventListener('click', ()=>openReels(null));
+document.getElementById('btnReelsTop').addEventListener('click', ()=>openReels(null));
+document.getElementById('btnTags').addEventListener('click', ()=>openTags(null));
 document.getElementById('btnSettings').addEventListener('click', openSettings);
 document.getElementById('sClose').addEventListener('click', ()=>closeSheet('shSet','bdSet'));
 document.getElementById('sDone').addEventListener('click', ()=>closeSheet('shSet','bdSet'));
@@ -1735,6 +2391,85 @@ document.getElementById('dCopy').addEventListener('click', ()=>{
   const it = items.find(i=>i.id===detailId);
   if(it) copyText(buildCopyText(it));
 });
+
+/* 🏷️ 해시태그 · 🎬 릴스 시트 */
+document.getElementById('tgClose').addEventListener('click', ()=>closeSheet('shTags','bdTags'));
+document.getElementById('tgCopy').addEventListener('click', ()=>{
+  const it = tagEpisode();
+  if(!it) return;
+  copyWithToast(goldTagsFor(it).join(' '), '해시태그 5개를 복사했어요 🏷️ 인스타에 붙여넣기!');
+});
+document.getElementById('tgRefresh').addEventListener('click', ()=>{
+  const it = tagEpisode();
+  if(!it) return;
+  goldRot[it.id] = (goldRot[it.id] || 0) + 1;
+  renderTagsSheet();
+  toast('같은 주제에서 다른 5개로 돌렸어요 🔄');
+});
+document.getElementById('tgBody').addEventListener('change', e=>{
+  const sel = e.target.closest('#tgPick');
+  if(!sel) return;
+  tagEpId = sel.value;
+  renderTagsSheet();
+});
+document.getElementById('tgBody').addEventListener('click', e=>{
+  if(e.target.closest('#tgThreadCopy')){
+    const ta = document.getElementById('tgThread');
+    copyWithToast((ta ? ta.value : '').trim(), '스레드 문구를 복사했어요 🧵 스레드에 붙여넣기!');
+    return;
+  }
+  if(e.target.closest('#tgThreadNew')){
+    const it = tagEpisode();
+    if(!it) return;
+    threadRot[it.id] = (threadRot[it.id] || 0) + 1;
+    const ta = document.getElementById('tgThread');
+    if(ta) ta.value = threadText(it, threadRot[it.id]);
+    toast('스레드 문구를 새로 썼어요 ✍️');
+  }
+});
+
+document.getElementById('rlClose').addEventListener('click', closeReels);
+document.getElementById('rlPick').addEventListener('click', ()=>document.getElementById('rlFile').click());
+document.getElementById('rlFile').addEventListener('change', e=>{
+  const files = Array.from(e.target.files || []);
+  e.target.value = '';
+  rlAddFiles(files);
+});
+document.getElementById('rlThumbs').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-act]');
+  if(!b) return;
+  const i = Number(b.dataset.i);
+  const act = b.dataset.act;
+  if(act === 'del'){
+    const gone = RL.items.splice(i, 1)[0];
+    if(gone){ try{ URL.revokeObjectURL(gone.url); }catch(err){} }
+  }else if(act === 'up' && i > 0){
+    const t = RL.items[i]; RL.items[i] = RL.items[i-1]; RL.items[i-1] = t;
+  }else if(act === 'down' && i < RL.items.length - 1){
+    const t = RL.items[i]; RL.items[i] = RL.items[i+1]; RL.items[i+1] = t;
+  }
+  rlPaint();
+});
+document.getElementById('rlRatio').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-v]');
+  if(!b) return;
+  RL.ratio = b.dataset.v;
+  rlPaint();
+});
+document.getElementById('rlSpeed').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-v]');
+  if(!b) return;
+  RL.cutSec = Number(b.dataset.v);
+  rlPaint();
+});
+document.getElementById('rlFade').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-v]');
+  if(!b) return;
+  RL.fade = b.dataset.v === 'fade';
+  rlPaint();
+});
+document.getElementById('rlMake').addEventListener('click', rlMake);
+document.getElementById('rlSave').addEventListener('click', rlSave);
 
 document.getElementById('castGrid').addEventListener('click', e=>{
   const b = e.target.closest('.cast-item');
@@ -1774,6 +2509,8 @@ document.querySelectorAll('.backdrop').forEach(bd=>{
     if(which === 'detail') closeSheet('shDetail','bdDetail');
     if(which === 'set') closeSheet('shSet','bdSet');
     if(which === 'cast') closeSheet('shCast','bdCast');
+    if(which === 'tags') closeSheet('shTags','bdTags');
+    if(which === 'reels') closeReels();
   });
 });
 document.addEventListener('keydown', e=>{
@@ -1864,6 +2601,36 @@ document.getElementById('dBody').addEventListener('click', e=>{
     const name = cc.dataset.cchar;
     closeSheet('shDetail','bdDetail');
     setTimeout(()=>openProfile(name), 130);
+    return;
+  }
+  /* 🏷️ 황금 해시태그 5개 */
+  const dGoldNew = e.target.closest('#dGoldNew');
+  if(dGoldNew){
+    const it = items.find(i=>i.id===detailId);
+    if(!it) return;
+    goldRot[it.id] = (goldRot[it.id] || 0) + 1;
+    const box = document.getElementById('dGoldChips');
+    if(box) box.innerHTML = goldChipsHTML(goldTagsFor(it));
+    return;
+  }
+  const dGoldCopy = e.target.closest('#dGoldCopy');
+  if(dGoldCopy){
+    const it = items.find(i=>i.id===detailId);
+    if(it) copyWithToast(goldTagsFor(it).join(' '), '해시태그 5개를 복사했어요 🏷️ 인스타에 붙여넣기!');
+    return;
+  }
+  const dGoldOpen = e.target.closest('#dGoldOpen');
+  if(dGoldOpen){
+    const id = detailId;
+    closeSheet('shDetail','bdDetail');
+    setTimeout(()=>openTags(id), 130);
+    return;
+  }
+  const dReelsBtn = e.target.closest('#dReels');
+  if(dReelsBtn){
+    const it = items.find(i=>i.id===detailId);
+    closeSheet('shDetail','bdDetail');
+    setTimeout(()=>openReels(it || null), 130);
     return;
   }
   const opt = e.target.closest('#dStatusOpts .opt');
