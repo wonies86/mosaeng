@@ -2241,6 +2241,32 @@ function rlSetBusy(b){
   btn.textContent = b ? '⏳ 영상 만드는 중…' : '🎬 영상 만들기';
   btn.style.opacity = b ? '.65' : '1';
 }
+async function rlRecordOnce(canvas, ctx, opt, mime, onProgress){
+  const stream = canvas.captureStream(30);
+  let rec = null;
+  try{
+    rec = mime ? new MediaRecorder(stream, { mimeType:mime, videoBitsPerSecond:5000000 }) : new MediaRecorder(stream);
+  }catch(e){
+    try{ stream.getTracks().forEach(t=>t.stop()); }catch(e2){}
+    throw e;
+  }
+  const chunks = [];
+  rec.ondataavailable = e => { if(e.data && e.data.size) chunks.push(e.data); };
+  const stopped = new Promise(res => { rec.onstop = res; });
+  rec.start(250);
+  const out = await rlRender(canvas, ctx, opt, onProgress);
+  if(out.aborted){
+    try{ rec.stop(); }catch(e){}
+    try{ stream.getTracks().forEach(t=>t.stop()); }catch(e){}
+    return { aborted:true };
+  }
+  await new Promise(r=>setTimeout(r, 320));
+  try{ rec.stop(); }catch(e){}
+  await stopped;
+  try{ stream.getTracks().forEach(t=>t.stop()); }catch(e){}
+  const type = String(rec.mimeType || mime || 'video/webm');
+  return { aborted:false, type, blob:new Blob(chunks, { type: type.split(';')[0] }) };
+}
 async function rlMake(){
   if(RL.busy) return;
   const imgs = RL.items.map(x=>x.bmp).filter(Boolean);
@@ -2264,6 +2290,16 @@ async function rlMake(){
   rlEl('rlBar').style.width = '0%';
   rlEl('rlPct').textContent = '0%';
   rlEl('rlState').textContent = '영상 만드는 중… 이 화면을 닫지 말아 주세요.';
+  const opt = {
+    W, H, ratio:RL.ratio, images:imgs,
+    title: rlEl('rlName').value.trim(),
+    cutSec: RL.cutSec, fade: RL.fade
+  };
+  const onProgress = (pct, idx, total, el)=>{
+    rlEl('rlBar').style.width = pct + '%';
+    rlEl('rlPct').textContent = pct + '%';
+    rlEl('rlState').textContent = `${idx + 1}/${total}컷 그리는 중 · ${el.toFixed(1)}초`;
+  };
   try{
     if(document.fonts){
       try{ await document.fonts.ready; }catch(e){}
@@ -2274,41 +2310,28 @@ async function rlMake(){
         ]);
       }catch(e){}
     }
-    const mime = rlPickMime();
-    const stream = canvas.captureStream(30);
-    let rec;
-    try{
-      rec = new MediaRecorder(stream, mime ? { mimeType:mime, videoBitsPerSecond:5000000 } : undefined);
-    }catch(e){
-      rec = new MediaRecorder(stream);
+    const primary = rlPickMime();
+    let out = await rlRecordOnce(canvas, ctx, opt, primary, onProgress);
+    /* MP4 인코더가 광고만 하고 빈 파일을 내면 WebM으로 한 번 더 */
+    if(!out.aborted && (!out.blob || !out.blob.size)){
+      const alt = ['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm']
+        .filter(m=>{ try{ return MediaRecorder.isTypeSupported(m); }catch(e){ return false; } })
+        .find(m=>m !== primary) || '';
+      if(alt){
+        rlEl('rlBar').style.width = '0%';
+        rlEl('rlPct').textContent = '0%';
+        rlEl('rlState').textContent = '한 번 더 만드는 중… (WebM)';
+        out = await rlRecordOnce(canvas, ctx, opt, alt, onProgress);
+      }
     }
-    const chunks = [];
-    rec.ondataavailable = e => { if(e.data && e.data.size) chunks.push(e.data); };
-    const stopped = new Promise(res => { rec.onstop = res; });
-    rec.start(250);
-    const out = await rlRender(canvas, ctx, {
-      W, H, ratio:RL.ratio, images:imgs,
-      title: rlEl('rlName').value.trim(),
-      cutSec: RL.cutSec, fade: RL.fade
-    }, (pct, idx, total, el)=>{
-      rlEl('rlBar').style.width = pct + '%';
-      rlEl('rlPct').textContent = pct + '%';
-      rlEl('rlState').textContent = `${idx + 1}/${total}컷 그리는 중 · ${el.toFixed(1)}초`;
-    });
     if(out.aborted){
-      try{ rec.stop(); }catch(e){}
-      stream.getTracks().forEach(t=>t.stop());
       rlEl('rlProg').hidden = true;
       rlEl('rlState').textContent = '영상 만들기를 멈췄어요. 다시 누르면 새로 만들어요.';
       return;
     }
-    await new Promise(r=>setTimeout(r, 320));
-    try{ rec.stop(); }catch(e){}
-    await stopped;
-    stream.getTracks().forEach(t=>t.stop());
-    const type = String(rec.mimeType || mime || 'video/webm');
-    const blob = new Blob(chunks, { type: type.split(';')[0] });
-    if(!blob.size) throw new Error('empty');
+    const blob = out.blob;
+    const type = out.type;
+    if(!blob || !blob.size) throw new Error('empty');
     if(RL.result && RL.result.url){ try{ URL.revokeObjectURL(RL.result.url); }catch(e){} }
     const ext = /mp4/i.test(type) ? 'mp4' : 'webm';
     RL.result = { blob, url: URL.createObjectURL(blob), ext, mime:type, sec: imgs.length * RL.cutSec, n: imgs.length };
