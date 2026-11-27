@@ -439,6 +439,32 @@ img{max-width:100%}
 .ocr-acts .btn{flex:1 1 auto}
 .ocr-note{margin:7px 0 0;font-size:10px;color:#B3A492;line-height:1.5;letter-spacing:-.2px}
 
+/* 채팅방명 · 화자(모과/생강) 설정 */
+.ocr-setup{margin-top:9px;background:#FFFCF6;border:1px solid var(--line);border-radius:14px;padding:9px 11px}
+.ocr-setup>summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--ginger-deep);letter-spacing:-.3px;list-style:none;display:flex;align-items:center;gap:5px}
+.ocr-setup>summary::-webkit-details-marker{display:none}
+.ocr-setup>summary::after{content:'▾';margin-left:auto;color:var(--ginger);font-size:11px;transition:transform .15s ease}
+.ocr-setup[open]>summary::after{transform:rotate(180deg)}
+.chat-row{display:flex;align-items:center;gap:7px;margin-top:8px}
+.chat-row .lb{flex:0 0 62px;font-size:11px;color:var(--ink-soft);letter-spacing:-.2px}
+.chat-in{flex:1;min-width:0;height:34px;border:1px solid var(--line);border-radius:10px;background:#FFFDF8;padding:0 9px;font-size:12.5px;color:var(--ink);letter-spacing:-.2px}
+.chat-in:focus{outline:none;border-color:var(--quince-line);box-shadow:0 0 0 3px rgba(244,201,93,.18)}
+.seg-mini{display:flex;gap:4px;flex:1;min-width:0}
+.seg-mini button{flex:1;min-width:0;height:34px;border-radius:10px;border:1px solid var(--line);background:#FFFDF8;font-size:12px;font-weight:700;color:var(--ink-soft);letter-spacing:-.2px;transition:background .14s ease,color .14s ease}
+.seg-mini button.on{background:var(--quince-soft);border-color:var(--quince-line);color:var(--ginger-deep)}
+.seg-mini button:active{transform:scale(.98)}
+.chat-hint{margin:8px 0 0;font-size:10px;color:#B3A492;line-height:1.55;letter-spacing:-.2px}
+.chat-hint b{color:var(--ginger);font-weight:700}
+.ocr-result{margin-top:9px;border:1px dashed var(--quince-line);background:#FDF6E8;border-radius:12px;padding:8px 10px}
+.ocr-result .rhead{font-size:11.5px;font-weight:700;color:var(--ginger-deep);letter-spacing:-.2px;margin-bottom:5px}
+.ocr-result .rbody{font-size:12px;line-height:1.6;color:#5E4C3B;max-height:126px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.spk-bar{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:7px}
+.spk-bar .lb{font-size:10.5px;color:var(--ink-soft);letter-spacing:-.2px;margin-right:1px}
+.spk-btn{height:29px;border-radius:9px;border:1px solid var(--quince-line);background:var(--quince-soft);color:var(--ginger-deep);font-size:11.5px;font-weight:700;padding:0 9px;letter-spacing:-.2px;transition:transform .12s ease}
+.spk-btn:active{transform:scale(.96)}
+.spk-room{margin-left:auto;height:29px;border-radius:9px;border:1px dashed var(--line);background:#FFFDF8;color:#8A7761;font-size:11px;padding:0 8px;letter-spacing:-.2px}
+.spk-room:active{transform:scale(.97)}
+
 .cuts{display:grid;gap:8px}
 .cutrow{
   display:flex;gap:9px;align-items:flex-start;
@@ -727,6 +753,25 @@ code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-fa
         <span class="go">＋</span>
       </button>
       <input type="file" id="ocrFile" accept="image/*" multiple hidden>
+      <details class="ocr-setup" id="ocrSetup" open>
+        <summary>💬 채팅방명 · 화자 설정 (모과 / 생강)</summary>
+        <div class="chat-row">
+          <span class="lb">채팅방명</span>
+          <input class="chat-in" id="chatRoom" placeholder="모과생강" maxlength="24" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="chat-row">
+          <span class="lb">내 카톡</span>
+          <div class="seg-mini" id="chatMe">
+            <button type="button" data-v="생강" aria-pressed="true">🧑 생강</button>
+            <button type="button" data-v="모과" aria-pressed="false">👩 모과</button>
+          </div>
+        </div>
+        <div class="chat-row">
+          <span class="lb">상대 닉네임</span>
+          <input class="chat-in" id="chatOther" placeholder="예: 임홀리 (쉼표로 여러 명)" maxlength="80" autocomplete="off" spellcheck="false">
+        </div>
+        <p class="chat-hint">오른쪽 노란 말풍선 = <b>내 카톡</b>, 왼쪽 말풍선 = <b>반대 화자</b>로 자동 표시해요. 상대 닉네임 줄은 화자 표시로 흡수합니다.</p>
+      </details>
       <div class="ocr-panel" id="ocrPanel" hidden>
         <div class="ocr-thumbs" id="ocrThumbs"></div>
         <div class="ocr-line"><span id="ocrState">대기 중</span><span id="ocrPct"></span></div>
@@ -735,6 +780,10 @@ code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-fa
           <button type="button" class="btn btn-line btn-sm" id="ocrSplit">🪄 컷 자동 나누기</button>
           <button type="button" class="btn btn-ghost btn-sm" id="ocrCopy">📋 제작 요청 복사</button>
           <button type="button" class="btn btn-ghost btn-sm" id="ocrClear">지우기</button>
+        </div>
+        <div class="ocr-result" id="ocrResult" hidden>
+          <div class="rhead" id="ocrResultHead">[채팅방: 모과생강]</div>
+          <div class="rbody" id="ocrResultBody"></div>
         </div>
         <p class="ocr-note">이미지는 폰 안에서만 읽혀요(서버 전송 없음). 인식이 어려우면 메모에 직접 적어주세요.</p>
       </div>
@@ -775,8 +824,14 @@ code{background:#F3E9DB;border-radius:5px;padding:1px 5px;font-size:11px;font-fa
     </div>
 
     <div class="field">
-      <div class="flabel"><b>자유 메모</b><span class="hint">아이디어·소재 메모</span></div>
-      <textarea class="tarea" id="fMemo" rows="3" placeholder="예: 실제 있었던 일 그대로 쓰기, 마지막 컷에 생강 리액션 살리기"></textarea>
+      <div class="flabel"><b>자유 메모</b><span class="hint">아이디어·채팅 대화 메모</span></div>
+      <div class="spk-bar" id="spkBar">
+        <span class="lb">화자 태그</span>
+        <button type="button" class="spk-btn" data-spk="모과">👩 모과:</button>
+        <button type="button" class="spk-btn" data-spk="생강">🧑 생강:</button>
+        <button type="button" class="spk-room" id="spkRoom" aria-label="채팅방명 바꾸기">🏠 모과생강</button>
+      </div>
+      <textarea class="tarea" id="fMemo" rows="3" placeholder="예: [채팅방: 모과생강] 아래에 모과: / 생강: 로 대화를 적기"></textarea>
     </div>
 
     <div class="field" style="margin-bottom:8px">
@@ -1476,6 +1531,7 @@ function openEditor(id){
     autosize(ta);
   });
   paintForm();
+  paintChatCfg();
   openSheet('shEditor','bdEditor');
   setTimeout(()=>{ if(!it) F.title().focus(); }, 260);
 }
@@ -1579,7 +1635,14 @@ function buildCopyText(it){
   const cuts = (it.cuts||[]).map((t,i)=>({t:(t||'').trim(), i})).filter(x=>x.t);
   if(cuts.length) cuts.forEach(x=>lines.push(`${x.i+1}컷: ${x.t}`));
   else lines.push('1컷: (아직 비어 있음)');
-  if(it.memo) lines.push('', `메모: ${it.memo}`);
+  if(it.memo){
+    /* 채팅방명·화자 표시는 메모에 적힌 그대로 복사 */
+    let memo = String(it.memo).replace(/\s+$/, '');
+    const mLines = memo.split('\n');
+    if(!isRoomLine(mLines[0]) && mLines.some(l=>/^\s*(?:모과|생강)\s*:/.test(l))) memo = chatRoomTag() + '\n' + memo;
+    if(memo.split('\n').length <= 1) lines.push('', `메모: ${memo}`);
+    else { lines.push('', '메모:'); memo.split('\n').forEach(l=>lines.push(l)); }
+  }
   if(it.tags) lines.push(`태그: ${it.tags}`);
   return lines.join('\n');
 }
@@ -1608,6 +1671,94 @@ async function copyText(text){
   const ok = await writeClipboard(text);
   toast(ok ? '시루에게 보낼 콘티를 복사했어요 📋 채팅에 붙여넣기!'
            : '복사가 안 됐어요. 길게 눌러 직접 복사해 주세요.');
+}
+
+/* ---------- 채팅방명 · 화자 (모과 / 생강) ---------- */
+const LS_CHAT = 'mosaeng.chat.v1';
+const LS_CHAT_OPEN = 'mosaeng.chat.open.v1';
+const CHAT_DEFAULT = { room:'모과생강', me:'생강', others:'임홀리' };
+let chatCfg = Object.assign({}, CHAT_DEFAULT);
+
+function loadChat(){
+  chatCfg = Object.assign({}, CHAT_DEFAULT);
+  try{
+    const raw = localStorage.getItem(LS_CHAT);
+    if(raw) chatCfg = Object.assign(chatCfg, JSON.parse(raw) || {});
+  }catch(e){}
+  chatCfg.room = String(chatCfg.room == null ? CHAT_DEFAULT.room : chatCfg.room).trim() || CHAT_DEFAULT.room;
+  chatCfg.me = (chatCfg.me === '모과') ? '모과' : '생강';
+  chatCfg.others = String(chatCfg.others == null ? CHAT_DEFAULT.others : chatCfg.others);
+}
+function saveChat(){ try{ localStorage.setItem(LS_CHAT, JSON.stringify(chatCfg)); }catch(e){} }
+const chatOtherOf = me => (me === '모과' ? '생강' : '모과');
+const chatRoomTag = () => `[채팅방: ${chatCfg.room}]`;
+const isRoomLine = s => /^\s*\[채팅방:[^\]]*\]\s*$/.test(String(s == null ? '' : s));
+function chatNicks(){
+  return String(chatCfg.others || '').split(/[,，、\/\n]/)
+    .map(s=>s.replace(/\s+/g, '').replace(/^[@#]/, '')).filter(Boolean);
+}
+/* 메모(채팅 입력) 맨 위에 [채팅방: 모과생강] 한 줄을 꼬박 유지 */
+function memoRoomSync(v){
+  const arr = String(v == null ? '' : v).split('\n');
+  if(arr.length && isRoomLine(arr[0])) arr.shift();
+  while(arr.length && !arr[0].trim()) arr.shift();
+  return [chatRoomTag()].concat(arr).join('\n');
+}
+/* 👩 모과: / 🧑 생강: — 커서가 있는 줄의 화자를 바꾸거나 붙이기 */
+function applySpeakerTag(who){
+  const ta = F.memo();
+  if(!ta) return;
+  const before = ta.value;
+  const caret = (typeof ta.selectionStart === 'number' && ta.selectionStart >= 0) ? ta.selectionStart : before.length;
+  let v = before;
+  const first = (before.split('\n')[0] || '');
+  if(!isRoomLine(first)) v = memoRoomSync(before);
+  let pos = Math.min(v.length, Math.max(0, caret + (v.length - before.length)));
+  let ls = v.lastIndexOf('\n', pos - 1) + 1;
+  let le = v.indexOf('\n', pos);
+  if(le < 0) le = v.length;
+  const line = v.slice(ls, le);
+  if(isRoomLine(line)){
+    const ins = '\n' + `${who}: `;
+    v = v.slice(0, le) + ins + v.slice(le);
+    pos = le + ins.length;
+  }else{
+    const body = line.replace(/^\s*(?:모과|생강)\s*:\s*/, '');
+    const nl = `${who}: ${body}`;
+    v = v.slice(0, ls) + nl + v.slice(le);
+    pos = ls + nl.length;
+  }
+  ta.value = v;
+  try{ ta.focus(); ta.setSelectionRange(pos, pos); }catch(e){}
+  ta.dispatchEvent(new Event('input', { bubbles:true }));
+}
+function paintChatLabels(){
+  const chip = document.getElementById('spkRoom');
+  if(chip) chip.textContent = `🏠 ${chatCfg.room}`;
+  const head = document.getElementById('ocrResultHead');
+  if(head) head.textContent = chatRoomTag();
+}
+function paintChatCfg(){
+  const room = document.getElementById('chatRoom');
+  if(room) room.value = chatCfg.room;
+  const oth = document.getElementById('chatOther');
+  if(oth) oth.value = chatCfg.others;
+  document.querySelectorAll('#chatMe button').forEach(b=>{
+    const on = b.dataset.v === chatCfg.me;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  paintChatLabels();
+}
+/* 🏠 방명 칩 → 설정 펼쳐서 방명 입력으로 이동 */
+function focusRoomSetting(){
+  const d = document.getElementById('ocrSetup');
+  if(d && !d.open){ d.open = true; try{ localStorage.setItem(LS_CHAT_OPEN, '1'); }catch(e){} }
+  const inp = document.getElementById('chatRoom');
+  if(!inp) return;
+  try{ d.scrollIntoView({ block:'center', behavior:'smooth' }); }catch(e){}
+  setTimeout(()=>{ try{ inp.focus(); inp.select(); }catch(e){} }, 180);
+  toast('채팅방명을 여기서 바꿀 수 있어요 🏠');
 }
 
 /* ---------- 카톡 캡처 → 콘티 (Tesseract.js, 지연 로드) ---------- */
@@ -1701,17 +1852,98 @@ function ocrPrepare(url){
     img.src = url;
   });
 }
-/* 인식 결과에서 줄 단위로 뽑기 (블록이 없으면 text 사용) */
+/* 인식 결과에서 줄 단위로 뽑기 — 말풍선 좌우 판단용 bbox까지 함께 (블록이 없으면 text 사용) */
 function ocrLinesOf(data){
   const out = [];
   try{
     (data.blocks || []).forEach(b=>{
       (b.paragraphs || []).forEach(par=>{
-        (par.lines || []).forEach(l=>{ if(l && l.text) out.push(l.text); });
+        (par.lines || []).forEach(l=>{
+          if(!l || !l.text) return;
+          const bb = l.bbox || {};
+          const x0 = Number(bb.x0) || 0, x1 = Number(bb.x1) || 0;
+          const y0 = Number(bb.y0) || 0, y1 = Number(bb.y1) || 0;
+          out.push({ text:l.text, x0, x1, y0, y1, h:Math.max(1, y1 - y0) });
+        });
       });
     });
   }catch(e){}
-  return out.length ? out : String((data && data.text) || '').split('\n');
+  if(!out.length){
+    String((data && data.text) || '').split('\n').forEach((t, i)=>{
+      out.push({ text:t, x0:0, x1:0, y0:i * 20, y1:i * 20 + 20, h:20 });
+    });
+  }
+  return out;
+}
+/* 줄 정리: 시간·날짜·읽음 같은 군더더기 제거 */
+function cleanChatLine(raw){
+  let s = String(raw == null ? '' : raw).replace(/\s+/g, ' ').trim();
+  if(!s) return '';
+  if(/^(\d{4}년\s*)?\d{1,2}월\s*\d{1,2}일/.test(s)) return '';
+  s = s.replace(/(오전|오후)?\s*\d{1,2}:\d{2}\s*/g, ' ').replace(/\s+/g, ' ').trim();
+  /* 시간이 남긴 OCR 잡음(、-~〉 © 등)이 앞에 붙은 경우만 걷어내기 */
+  s = s.replace(/^[\s、.·\-~^|<>〈〉《》©®※+;:，]{0,8}(?=[가-힣A-Za-z0-9])/, m=> /[、~^|<>〈〉©®※]/.test(m) ? '' : m).trim();
+  if(!s) return '';
+  if(/^(읽음|입력\s*중|입력중|-?\d{1,3})$/.test(s)) return '';
+  if(!/[가-힣]/.test(s) && !/[A-Za-z]{3,}/.test(s)) return '';
+  return s;
+}
+/* 방명·상대 닉네임 줄인가 (화자 표시로 흡수) */
+function isChatNameLine(t, nicks, room){
+  const n = String(t || '').replace(/[\s:：·ㆍ.!?~♡♥]/g, '');
+  if(n.length < 2) return false;
+  const r = String(room || '').replace(/\s+/g, '');
+  if(r && n.startsWith(r) && n.length <= r.length + 4) return true;
+  if(n === '모과' || n === '생강') return true;   /* 캐릭터 이름만 있는 줄 = 닉네임 머리말 */
+  return nicks.some(x=> n === x || (n.startsWith(x) && n.length <= x.length + 3));
+}
+/* 좌우 정렬로 화자 나누기 — 오른쪽(내 말풍선)=내 화자, 왼쪽(상대)=반대 화자 */
+function labeledChatMsgs(pages){
+  const me = (chatCfg.me === '모과') ? '모과' : '생강';
+  const other = chatOtherOf(me);
+  const nicks = chatNicks();
+  const room = chatCfg.room;
+  const msgs = [];
+  let hits = 0, total = 0;
+  (pages || []).forEach(p=>{
+    const W = Math.max(1, Number(p && p.width) || 1);
+    const rows = (p && p.lines ? p.lines : []).slice().sort((a, b)=> a.y0 - b.y0 || a.x0 - b.x0);
+    rows.forEach(row=>{
+      const t = cleanChatLine(row && row.text);
+      if(!t) return;
+      if(isChatNameLine(t, nicks, room)) return;
+      const cx = ((row.x0 + row.x1) / 2) / W;
+      let spk = null;
+      if(cx >= 0.60){ spk = me; hits++; }
+      else if(cx <= 0.40){ spk = other; hits++; }
+      total++;
+      const prev = msgs[msgs.length - 1];
+      if(!spk) spk = (prev && !prev.pageEnd) ? prev.spk : other;
+      if(prev && prev.spk === spk && prev.text === t) return;   /* 겹쳐 찍은 캡처 중복 제거 */
+      const gap = prev ? (row.y0 - prev.y1) : 0;
+      const sameBubble = prev && !prev.pageEnd && prev.spk === spk &&
+        gap <= Math.max(6, 0.55 * Math.max(prev.h || 0, row.h || 0));
+      if(sameBubble){
+        prev.text += ' ' + t;
+        prev.y1 = row.y1;
+        prev.h = row.h;
+      }else{
+        msgs.push({ spk, text:t, y0:row.y0, y1:row.y1, h:row.h, pageEnd:false });
+      }
+    });
+    if(msgs.length) msgs[msgs.length - 1].pageEnd = true;   /* 페이지 넘어가면 말풍선 합치지 않음 */
+  });
+  return { msgs, hits, total };
+}
+/* 메모에 들어갈 채팅 텍스트 — 첫 줄은 항상 [채팅방: 방명] */
+function ocrChatText(pages){
+  const { msgs, hits } = labeledChatMsgs(pages);
+  if(!msgs.length) return { lines:[], text:'', labeled:false };
+  const body = hits
+    ? msgs.map(m=> `${m.spk}: ${m.text}`)
+    : msgs.map(m=> m.text);
+  const lines = [chatRoomTag()].concat(body);
+  return { lines, text:lines.join('\n'), labeled:hits > 0 };
 }
 /* 카톡 화면에서 글자만 남기기: 시간·날짜·읽음 같은 군더더기 제거 */
 function cleanKakaoText(raw){
@@ -1760,25 +1992,32 @@ async function ocrRun(files){
   });
   ocrEl('ocrPanel').hidden = false;
   ocrEl('ocrActs').hidden = true;
+  const resBox = ocrEl('ocrResult');
+  if(resBox) resBox.hidden = true;
   ocrBase = 3;
   ocrSetState('준비 중…', 3);
   try{
     const worker = await ocrWorker();
-    const parts = [];
+    const pages = [];
     for(let i = 0; i < ocrFiles.length; i++){
       ocrBase = (i / ocrFiles.length) * 100;
       ocrSetState(`${i + 1}/${ocrFiles.length}장 읽는 중`, ocrBase + 1);
       const prepared = await ocrPrepare(ocrUrls[i]);
       const { data } = await worker.recognize(prepared);
-      parts.push(ocrLinesOf(data).join('\n'));
+      pages.push({ lines: ocrLinesOf(data), width: (prepared && prepared.width) || 0 });
     }
-    const lines = cleanKakaoText(parts.join('\n'));
-    ocrSetState(lines.length ? `인식 완료 · ${lines.length}줄` : '글자를 찾지 못했어요', 100);
+    const out = ocrChatText(pages);
+    const count = Math.max(0, out.lines.length - 1);
+    ocrSetState(count ? `인식 완료 · ${count}줄` : '글자를 찾지 못했어요', 100);
     ocrEl('ocrActs').hidden = false;
-    if(!lines.length){ toast('글자를 못 찾았어요 · 메모에 직접 적어주세요'); return; }
-    ocrText = lines.join('\n');
+    if(!count){ toast('글자를 못 찾았어요 · 메모에 직접 적어주세요'); return; }
+    ocrText = out.text;
     F.memo().value = ocrText;
-    toast('카톡 내용을 메모에 넣었어요 📸');
+    ocrEl('ocrResultHead').textContent = chatRoomTag();
+    ocrEl('ocrResultBody').textContent = out.lines.slice(1).join('\n');
+    if(resBox) resBox.hidden = false;
+    toast(out.labeled ? '카톡을 모과·생강으로 나눠 메모에 넣었어요 📸'
+                      : '카톡 내용을 메모에 넣었어요 📸');
   }catch(e){
     ocrSetState('인식에 실패했어요 · 직접 입력해 주세요', 100);
     ocrEl('ocrActs').hidden = false;
@@ -1795,8 +2034,8 @@ function ocrSplitInto(cuts){
   });
 }
 function ocrSplitCuts(){
-  const src = (ocrText || F.memo().value || '').trim();
-  const lines = src.split('\n').map(s=>s.trim()).filter(Boolean);
+  const src = (F.memo().value || ocrText || '').trim();
+  const lines = src.split('\n').map(s=>s.trim()).filter(Boolean).filter(s=>!isRoomLine(s));
   if(!lines.length){ toast('먼저 카톡 캡처를 넣어주세요'); return; }
   const groups = Math.min(4, lines.length);
   const per = Math.ceil(lines.length / groups);
@@ -2404,6 +2643,53 @@ document.getElementById('ocrClear').addEventListener('click', ()=>{
   ocrFiles = [];
   ocrSetState('대기 중', null);
 });
+/* 채팅방명 · 화자 설정 */
+const chatRoomIn = document.getElementById('chatRoom');
+chatRoomIn.addEventListener('input', ()=>{
+  const v = chatRoomIn.value.trim();
+  if(!v) return;
+  chatCfg.room = v;
+  saveChat();
+  paintChatLabels();
+});
+chatRoomIn.addEventListener('change', ()=>{
+  chatCfg.room = chatRoomIn.value.trim() || CHAT_DEFAULT.room;
+  saveChat();
+  paintChatCfg();
+  const ta = F.memo();
+  const fl = (ta.value.split('\n')[0] || '');
+  if(isRoomLine(fl)) ta.value = memoRoomSync(ta.value);
+});
+document.getElementById('chatOther').addEventListener('input', e=>{
+  chatCfg.others = e.target.value;
+  saveChat();
+});
+document.getElementById('chatOther').addEventListener('change', e=>{
+  chatCfg.others = e.target.value.trim();
+  saveChat();
+});
+document.getElementById('chatMe').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-v]');
+  if(!b) return;
+  chatCfg.me = (b.dataset.v === '모과') ? '모과' : '생강';
+  saveChat();
+  paintChatCfg();
+  toast(`내 카톡을 ${chatCfg.me}로 정했어요 · 상대는 ${chatOtherOf(chatCfg.me)} 🗩`);
+});
+document.getElementById('spkBar').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-spk]');
+  if(b){ applySpeakerTag(b.dataset.spk); return; }
+  if(e.target.closest('#spkRoom')) focusRoomSetting();
+});
+(function chatSetupOpenState(){
+  const d = document.getElementById('ocrSetup');
+  if(!d) return;
+  let v = null;
+  try{ v = localStorage.getItem(LS_CHAT_OPEN); }catch(e){}
+  if(v === '0') d.open = false;
+  d.addEventListener('toggle', ()=>{ try{ localStorage.setItem(LS_CHAT_OPEN, d.open ? '1' : '0'); }catch(e){} });
+})();
+
 document.getElementById('dClose').addEventListener('click', ()=>closeSheet('shDetail','bdDetail'));
 document.getElementById('dEdit').addEventListener('click', ()=>{
   const id = detailId;
@@ -2899,6 +3185,7 @@ document.getElementById('sImportFile').addEventListener('change', async e=>{
 
 /* ---------- boot ---------- */
 loadLocal();
+loadChat();
 seed();
 applySeeds();
 buildOpts();
